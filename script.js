@@ -148,7 +148,7 @@ const randomPlus = {
 
 const colorPalletes = {
     savedColor: 0,
-    paint: function (color = Math.floor(Math.random() * 360)) {
+    paint: function (color = randomPlus.randomNumber(0, 360)) {
         document.documentElement.style.setProperty(`--dark-1`, `hsl(${color}, 5%, 10%)`);
         document.documentElement.style.setProperty(`--dark-2`, `hsl(${color}, 10%, 20%)`);
         document.documentElement.style.setProperty(`--dark-3`, `hsl(${color}, 15%, 30%)`);
