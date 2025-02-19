@@ -11,30 +11,38 @@ const easyTree = {
         }
     }
 }
+const PageGroup = function (pageClass, displayType = "block") {
+    this.pageClass = pageClass;
+    this.displayType = displayType;
+    this.currentPageId = document.getElementsByClassName(pageClass)[0].id;
 
-const pages = {
-    changePage: function (pageId, pageClass, displayType) {
-        allPages = document.getElementsByClassName(pageClass);
+    this.changePage = function (pageId) {
+        allPages = document.getElementsByClassName(this.pageClass);
         for (let i = 0; i < allPages.length; i++) {
             allPages[i].style.display = "none";
             document.getElementById(pageId).classList.remove("open");
         }
+
         document.getElementById(pageId).style.display = displayType;
         document.getElementById(pageId).classList.add("open");
+        this.currentPageId = document.getElementsByClassName(pageClass)[0].id;
     }
+
+    this.changePage(this.currentPageId);
 }
 
-const SlideShow = function (htmlElement) {
+const SlideShow = function (htmlElement, displayType = "block") {
     this.htmlElement = htmlElement;
     this.slideNumber = 0;
     this.numberOfSlides = this.htmlElement.children.length;
+    this.displayType = displayType;
 
-    this.refreshSlide = function (numberOfSlides, htmlElement, slideNumber) {
+    this.refreshSlide = function (numberOfSlides, htmlElement, slideNumber, displayType = this.displayType) {
         for (let i = 0; i < numberOfSlides; i++) {
             htmlElement.children[i].style.display = "none";
         }
 
-        htmlElement.children[slideNumber].style.display = "block";
+        htmlElement.children[slideNumber].style.display = displayType;
     }
 
     this.clickable = function () {
@@ -42,11 +50,12 @@ const SlideShow = function (htmlElement) {
         let slideNumber = this.slideNumber;
         let numberOfSlides = this.numberOfSlides;
         let htmlElement = this.htmlElement;
+        let displayType = this.displayType;
 
         htmlElement.style.cursor = "pointer";
         htmlElement.style.userSelect = "none";
 
-        this.refreshSlide(numberOfSlides, htmlElement, slideNumber);
+        this.refreshSlide(numberOfSlides, htmlElement, slideNumber, displayType);
 
         htmlElement.onclick = function (event) {
             slideNumber++;
@@ -68,8 +77,9 @@ const SlideShow = function (htmlElement) {
         let slideNumber = this.slideNumber;
         let numberOfSlides = this.numberOfSlides;
         let htmlElement = this.htmlElement;
+        let displayType = this.displayType;
 
-        this.refreshSlide(numberOfSlides, htmlElement, slideNumber);
+        this.refreshSlide(numberOfSlides, htmlElement, slideNumber, displayType);
 
         setInterval(function () {
             slideNumber++;

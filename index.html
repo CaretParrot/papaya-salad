@@ -7,22 +7,39 @@
         <title>Document</title>
         <link rel='icon' href='https://caretparrot.github.io/My-Libraries/Profile%20Picture.png'>
         <link rel='stylesheet' href='https://caretparrot.github.io/My-Libraries/default.css'>
+        <link rel='stylesheet' href='./style.css'>
         <script src="./script.js"></script>
     </head>
 
     <body>
-        <div id="slideshow" style="margin: 1rem;">
-            <h1>Hello!</h1>
-            <h1>Welcome to papaya-salad.js!</h1>
-            <h1>I'm glad you are here!</h1>
+        <div id="homePage" class="pages">
+            <div id="slideshow" style="margin: 1rem;">
+                <h1>Hello!</h1>
+                <h1>Welcome to papaya-salad.js!</h1>
+                <h1>I'm glad you are here!</h1>
+            </div>
+            <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
+                Javascript a little easier!</p>
+            <button id="nextPage">Next Page</button>
         </div>
-        <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
-            Javascript a little easier!</p>
-        <script>
-            
+        <div id="empty" class="pages">
+            <p>Hahaha this is not empty...</p>
+            <button id="previousPage">Previous Page</button>
+        </div>
 
-            let slideshow = new SlideShow(document.getElementById("slideshow"));
+        <script>
+            easyTree.setupTree();
+            let slideshow = new SlideShow(easyTree.slideshow);
+            let pageGroup = new PageGroup("pages", "grid");
             slideshow.clickable();
+
+            easyTree.nextPage.onclick = function () {
+                pageGroup.changePage("empty");
+            }
+
+            easyTree.previousPage.onclick = function () {
+                pageGroup.changePage("homePage");
+            }
         </script>
     </body>
 
