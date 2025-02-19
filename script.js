@@ -1,0 +1,150 @@
+const easyTree = {
+    setupTree: function () {
+        let allElements = document.querySelectorAll("*");
+
+        for (let i = 0; i < allElements.length; i++) {
+            if (allElements[i].id === "setupTree") {
+                console.error("setupTree is already used by easyTree. Please use a different id.")
+            } else {
+                easyTree[allElements[i].id] = allElements[i];
+            }
+        }
+    }
+}
+
+const pages = {
+    changePage: function (pageId, pageClass, displayType) {
+        allPages = document.getElementsByClassName(pageClass);
+        for (let i = 0; i < allPages.length; i++) {
+            allPages[i].style.display = "none";
+            document.getElementById(pageId).classList.remove("open");
+        }
+        document.getElementById(pageId).style.display = displayType;
+        document.getElementById(pageId).classList.add("open");
+    }
+}
+
+const SlideShow = function (htmlElement) {
+    this.htmlElement = htmlElement;
+    this.slideNumber = 0;
+    this.numberOfSlides = this.htmlElement.children.length;
+
+    this.refreshSlide = function (numberOfSlides, htmlElement, slideNumber) {
+        for (let i = 0; i < numberOfSlides; i++) {
+            htmlElement.children[i].style.display = "none";
+        }
+
+        htmlElement.children[slideNumber].style.display = "block";
+    }
+
+    this.clickable = function () {
+        let slides = this.slides;
+        let slideNumber = this.slideNumber;
+        let numberOfSlides = this.numberOfSlides;
+        let htmlElement = this.htmlElement;
+
+        htmlElement.style.cursor = "pointer";
+        htmlElement.style.userSelect = "none";
+
+        this.refreshSlide(numberOfSlides, htmlElement, slideNumber);
+
+        htmlElement.onclick = function (event) {
+            slideNumber++;
+
+            if (slideNumber === numberOfSlides) {
+                slideNumber = 0;
+            }
+
+            for (let i = 0; i < numberOfSlides; i++) {
+                htmlElement.children[i].style.display = "none";
+            }
+
+            htmlElement.children[slideNumber].style.display = "block";
+        }
+    }
+
+    this.auto = function (delay = 1000) {
+        let slides = this.slides;
+        let slideNumber = this.slideNumber;
+        let numberOfSlides = this.numberOfSlides;
+        let htmlElement = this.htmlElement;
+
+        this.refreshSlide(numberOfSlides, htmlElement, slideNumber);
+
+        setInterval(function () {
+            slideNumber++;
+
+            if (slideNumber === numberOfSlides) {
+                slideNumber = 0;
+            }
+
+            for (let i = 0; i < numberOfSlides; i++) {
+                htmlElement.children[i].style.display = "none";
+            }
+
+            htmlElement.children[slideNumber].style.display = "block";
+        }, delay);
+    }
+}
+
+const randomPlus = {
+    randomInteger: function (min, max) {
+        return Math.floor(Math.random() * max) + min;
+    },
+    randomNumber: function (min, max) {
+        return Math.random() * max + min;
+    },
+    randomCard: function () {
+        let randomCardNumber = randomInteger(1, 13);
+        let randomSuit = randomInteger(1, 4);
+
+        switch (randomCardNumber) {
+            case 1:
+                randomCardNumber = "Ace";
+                break;
+            case 11:
+                randomCardNumber = "Jack";
+                break;
+            case 12:
+                randomCardNumber = "Queen";
+                break;
+            case 13:
+                randomCardNumber = "King";
+                break;
+            default:
+                break;
+        }
+
+        switch (randomSuit) {
+            case 1:
+                randomSuit = "Spades";
+                break;
+            case 2:
+                randomSuit = "Diamonds";
+                break;
+            case 3:
+                randomSuit = "Clubs";
+                break;
+            case 4:
+                randomSuit = "Hearts";
+                break;
+            default:
+                break;
+        }
+
+        return `${randomCardNumber} of ${randomSuit}`;
+    }
+}
+
+const colorPalletes = {
+    savedColor: 0,
+    paint: function (color = Math.floor(Math.random() * 360)) {
+        document.documentElement.style.setProperty(`--dark-1`, `hsl(${color}, 5%, 10%)`);
+        document.documentElement.style.setProperty(`--dark-2`, `hsl(${color}, 10%, 20%)`);
+        document.documentElement.style.setProperty(`--dark-3`, `hsl(${color}, 15%, 30%)`);
+        document.documentElement.style.setProperty(`--light-1`, `hsl(${color}, 45%, 90%)`);
+        document.documentElement.style.setProperty(`--light-2`, `hsl(${color}, 40%, 80%)`);
+        document.documentElement.style.setProperty(`--light-3`, `hsl(${color}, 35%, 70%)`);
+        colorPalletes.savedColor = color;
+    }
+}
