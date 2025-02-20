@@ -105,8 +105,8 @@ const randomPlus = {
         return Math.random() * max + min;
     },
     randomCard: function () {
-        let randomCardNumber = randomInteger(1, 13);
-        let randomSuit = randomInteger(1, 4);
+        let randomCardNumber = this.randomInteger(1, 13);
+        let randomSuit = this.randomInteger(1, 4);
 
         switch (randomCardNumber) {
             case 1:
@@ -160,7 +160,7 @@ const colorPalletes = {
 }
 
 const binder = {
-    linkProperties: function (element1, property1, element2, property2, twoWay = false) {
+    linkProperties: function (element1, property1, element2, property2, twoWay = true) {
         element2[property2] = element1[property1];
         element1[property1] = element2[property2];
         element1.oninput = function () {

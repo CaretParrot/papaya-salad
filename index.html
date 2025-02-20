@@ -19,7 +19,7 @@
                 <h1>I'm glad you are here!</h1>
             </div>
             <input id="textBox" value="hmmm">
-            <textarea id="textLabel"></textarea>
+            <textarea id="textArea"></textarea>
             <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
                 Javascript a little easier!</p>
             <button id="nextPage">Next Page</button>
@@ -45,7 +45,7 @@
                 pageGroup.changePage("homePage");
             }
 
-            binder.linkProperties(id.textBox, "value", id.textLabel, "value", true);
+            binder.linkProperties(id.textBox, "value", id.textArea, "value");
         </script>
     </body>
 
