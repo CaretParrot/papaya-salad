@@ -160,7 +160,7 @@ const colorPalletes = {
 }
 
 const binder = {
-    bind: function (element1, property1, element2, property2, twoWay = false) {
+    linkProperties: function (element1, property1, element2, property2, twoWay = false) {
         element2[property2] = element1[property1];
         element1[property1] = element2[property2];
         element1.oninput = function () {
