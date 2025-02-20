@@ -1,4 +1,4 @@
-const easyTree = {
+const id = {
     setupTree: function () {
         let allElements = document.querySelectorAll("*");
 
@@ -6,7 +6,7 @@ const easyTree = {
             if (allElements[i].id === "setupTree") {
                 console.error("setupTree is already used by easyTree. Please use a different id.")
             } else {
-                easyTree[allElements[i].id] = allElements[i];
+                id[allElements[i].id] = allElements[i];
             }
         }
     }
