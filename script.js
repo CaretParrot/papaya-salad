@@ -158,3 +158,19 @@ const colorPalletes = {
         colorPalletes.savedColor = color;
     }
 }
+
+const binder = {
+    bind: function (element1, property1, element2, property2, twoWay = false) {
+        element2[property2] = element1[property1];
+        element1[property1] = element2[property2];
+        element1.oninput = function () {
+            element2[property2] = element1[property1];
+        }
+
+        if (twoWay) {
+            element2.oninput = function () {
+                element1[property1] = element2[property2];
+            }
+        }
+    }
+}

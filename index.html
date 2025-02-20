@@ -18,6 +18,8 @@
                 <h1>Welcome to papaya-salad.js!</h1>
                 <h1>I'm glad you are here!</h1>
             </div>
+            <input id="textBox" value="hmmm">
+            <textarea id="textLabel"></textarea>
             <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
                 Javascript a little easier!</p>
             <button id="nextPage">Next Page</button>
@@ -28,19 +30,22 @@
         </div>
 
         <script>
-            easyTree.setupTree();
-            let slideshow = new SlideShow(easyTree.slideshow);
+            id.setupTree();
+            let slideshow = new SlideShow(id.slideshow);
             let pageGroup = new PageGroup("pages", "grid");
             slideshow.clickable();
+            let newVar = "hmmmm";
 
-            easyTree.nextPage.onclick = function () {
+            id.nextPage.onclick = function () {
                 pageGroup.changePage("empty");
                 colorPalletes.paint();
             }
 
-            easyTree.previousPage.onclick = function () {
+            id.previousPage.onclick = function () {
                 pageGroup.changePage("homePage");
             }
+
+            binder.bind(id.textBox, "value", id.textLabel, "value", true);
         </script>
     </body>
 
