@@ -11,6 +11,7 @@ const id = {
         }
     }
 }
+
 const PageGroup = function (pageClass, displayType = "block") {
     this.pageClass = pageClass;
     this.displayType = displayType;
@@ -165,6 +166,7 @@ const binder = {
     linkProperties: function (element1, property1, element2, property2, twoWay = true) {
         element2[property2] = element1[property1];
         element1[property1] = element2[property2];
+
         element1.oninput = function () {
             element2[property2] = element1[property1];
         }
