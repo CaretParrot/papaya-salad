@@ -1,44 +1,59 @@
-const id = {
-    setupTree: function () {
-        let allElements = document.querySelectorAll("*");
-
-        for (let i = 0; i < allElements.length; i++) {
-            if (allElements[i].id === "setupTree") {
-                console.error("setupTree is already used by easyTree. Please use a different id.")
-            } else {
-                id[allElements[i].id] = allElements[i];
-            }
-        }
-    }
-}
-
+/**
+ * 
+ * @param {string} pageClass 
+ * @param {string} displayType 
+ */
 const PageGroup = function (pageClass, displayType = "block") {
     this.pageClass = pageClass;
     this.displayType = displayType;
     this.currentPageId = document.getElementsByClassName(pageClass)[0].id;
 
+    /**
+     * 
+     * @param {string} pageId 
+     * @returns {boolean}
+     */
     this.changePage = function (pageId) {
-        allPages = document.getElementsByClassName(this.pageClass);
+        if (document.getElementById(pageId) == null) {
+            return false;
+        } 
+        let allPages = document.getElementsByClassName(pageClass);
         for (let i = 0; i < allPages.length; i++) {
             allPages[i].style.display = "none";
+            // @ts-ignore
             document.getElementById(pageId).classList.remove("open");
         }
 
+        // @ts-ignore
         document.getElementById(pageId).style.display = displayType;
+        // @ts-ignore
         document.getElementById(pageId).classList.add("open");
-        this.currentPageId = document.getElementsByClassName(pageClass)[0].id;
+        this.currentPageId = allPages[0].id;
+        return true;
     }
 
     this.changePage(this.currentPageId);
 }
 
+/**
+ * 
+ * @param {Element} htmlElement 
+ * @param {string} displayType 
+ */
 const SlideShow = function (htmlElement, displayType = "block") {
     this.htmlElement = htmlElement;
     this.slideNumber = 0;
     this.numberOfSlides = this.htmlElement.children.length;
     this.displayType = displayType;
 
-    this.refreshSlide = function (numberOfSlides, htmlElement, slideNumber, displayType = this.displayType) {
+    /**
+     * 
+     * @param {number} numberOfSlides 
+     * @param {object} htmlElement 
+     * @param {number} slideNumber 
+     * @param {string} displayType 
+     */
+    this.refreshSlide = function (numberOfSlides, htmlElement, slideNumber, displayType = "block") {
         for (let i = 0; i < numberOfSlides; i++) {
             htmlElement.children[i].style.display = "none";
         }
@@ -73,8 +88,11 @@ const SlideShow = function (htmlElement, displayType = "block") {
         }
     }
 
+    /**
+     * 
+     * @param {*} delay 
+     */
     this.auto = function (delay = 1000) {
-        let slides = this.slides;
         let slideNumber = this.slideNumber;
         let numberOfSlides = this.numberOfSlides;
         let htmlElement = this.htmlElement;
@@ -99,28 +117,46 @@ const SlideShow = function (htmlElement, displayType = "block") {
 }
 
 const randomPlus = {
+    /**
+     * 
+     * @param {number} min 
+     * @param {number} max 
+     * @returns {number}
+     */
     randomInteger: function (min, max) {
         return Math.floor(Math.random() * max) + min;
     },
+    /**
+     * 
+     * @param {number} min 
+     * @param {number} max 
+     * @returns {number}
+     */
     randomNumber: function (min, max) {
         return Math.random() * max + min;
     },
+    /**
+     * 
+     * @returns {string}
+     */
     randomCard: function () {
         let randomCardNumber = this.randomInteger(1, 13);
         let randomSuit = this.randomInteger(1, 4);
+        let convertedNumber;
+        let convertedSuit;
 
         switch (randomCardNumber) {
             case 1:
-                randomCardNumber = "Ace";
+                convertedNumber = "Ace";
                 break;
             case 11:
-                randomCardNumber = "Jack";
+                convertedNumber = "Jack";
                 break;
             case 12:
-                randomCardNumber = "Queen";
+                convertedNumber = "Queen";
                 break;
             case 13:
-                randomCardNumber = "King";
+                convertedNumber = "King";
                 break;
             default:
                 break;
@@ -128,27 +164,31 @@ const randomPlus = {
 
         switch (randomSuit) {
             case 1:
-                randomSuit = "Spades";
+                convertedSuit = "Spades";
                 break;
             case 2:
-                randomSuit = "Diamonds";
+                convertedSuit = "Diamonds";
                 break;
             case 3:
-                randomSuit = "Clubs";
+                convertedSuit = "Clubs";
                 break;
             case 4:
-                randomSuit = "Hearts";
+                convertedSuit = "Hearts";
                 break;
             default:
                 break;
         }
 
-        return `${randomCardNumber} of ${randomSuit}`;
+        return `${convertedNumber} of ${convertedSuit}`;
     }
 }
 
 const colorPalletes = {
     savedColor: 0,
+    /**
+     * 
+     * @param {number} color 
+     */
     paint: function (color = randomPlus.randomNumber(0, 360)) {
         document.documentElement.style.setProperty(`--dark-1`, `hsl(${color}, 5%, 10%)`);
         document.documentElement.style.setProperty(`--dark-2`, `hsl(${color}, 10%, 20%)`);
@@ -163,6 +203,14 @@ const colorPalletes = {
 }
 
 const binder = {
+    /**
+     * 
+     * @param {*} element1 
+     * @param {*} property1 
+     * @param {*} element2 
+     * @param {*} property2 
+     * @param {boolean} twoWay 
+     */
     linkProperties: function (element1, property1, element2, property2, twoWay = true) {
         element2[property2] = element1[property1];
         element1[property1] = element2[property2];
