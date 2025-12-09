@@ -1,117 +1,119 @@
 /**
- * 
  * @param {string} pageClass 
  * @param {string} displayType 
  */
-const PageGroup = function (pageClass, displayType = "block") {
-    this.pageClass = pageClass;
-    this.displayType = displayType;
-    this.currentPageId = document.getElementsByClassName(pageClass)[0].id;
+class PageGroup {
+    /**
+     * @param {string} pageClass 
+     * @param {string} displayType 
+     */
+    constructor(pageClass, displayType = "block") {
+        this.pageClass = pageClass;
+        this.displayType = displayType;
+        this.currentPageId = document.getElementsByClassName(pageClass)[0].id;
+        this.changePage(this.currentPageId);
+    }
 
     /**
-     * 
      * @param {string} pageId 
      * @returns {boolean}
      */
-    this.changePage = function (pageId) {
-        if (document.getElementById(pageId) == null) {
+    changePage(pageId) {
+        let selectedElement = document.getElementById(pageId);
+        if (selectedElement == null) {
             return false;
         } 
-        let allPages = document.getElementsByClassName(pageClass);
+        
+        let allPages = /** @type {HTMLCollectionOf<HTMLElement>} */ (document.getElementsByClassName(this.pageClass));
         for (let i = 0; i < allPages.length; i++) {
             allPages[i].style.display = "none";
-            // @ts-ignore
-            document.getElementById(pageId).classList.remove("open");
+            /** @type {HTMLElement} */ (document.getElementById(pageId)).classList.remove("open");
         }
 
-        // @ts-ignore
-        document.getElementById(pageId).style.display = displayType;
-        // @ts-ignore
-        document.getElementById(pageId).classList.add("open");
-        this.currentPageId = allPages[0].id;
+        selectedElement.style.display = this.displayType;
+        selectedElement.classList.add("open");
+        this.currentPageId = pageId;
         return true;
     }
-
-    this.changePage(this.currentPageId);
 }
 
-/**
- * 
- * @param {Element} htmlElement 
- * @param {string} displayType 
- */
-const SlideShow = function (htmlElement, displayType = "block") {
-    this.htmlElement = htmlElement;
-    this.slideNumber = 0;
-    this.numberOfSlides = this.htmlElement.children.length;
-    this.displayType = displayType;
+
+class SlideShow {
+    /**
+     * @param {HTMLElement} container 
+     * @param {string} displayType 
+     */
+    constructor(container, displayType = "block") {
+        this.container = container;
+        this.slides = /** @type {HTMLCollectionOf<HTMLElement>} */ this.container.querySelectorAll("*");
+        this.slideNumber = 0;
+        this.slideCount = this.slides.length;
+        this.displayType = displayType;
+    }
 
     /**
      * 
-     * @param {number} numberOfSlides 
-     * @param {object} htmlElement 
      * @param {number} slideNumber 
-     * @param {string} displayType 
      */
-    this.refreshSlide = function (numberOfSlides, htmlElement, slideNumber, displayType = "block") {
-        for (let i = 0; i < numberOfSlides; i++) {
-            htmlElement.children[i].style.display = "none";
+    moveToSlide(slideNumber) {
+        for (let i = 0; i < this.slideCount; i++) {
+            /** @type {HTMLElement} */ (this.container.children[i]).style.display = "none";
         }
 
-        htmlElement.children[slideNumber].style.display = displayType;
+        /** @type {HTMLElement} */ (this.container.children[slideNumber]).style.display = this.displayType;
     }
 
-    this.clickable = function () {
-        let slides = this.slides;
+    clickable() {
+        let slideCount = this.slideCount;
         let slideNumber = this.slideNumber;
-        let numberOfSlides = this.numberOfSlides;
-        let htmlElement = this.htmlElement;
+        let slides = this.slides;
         let displayType = this.displayType;
 
-        htmlElement.style.cursor = "pointer";
-        htmlElement.style.userSelect = "none";
+        this.container.style.cursor = "pointer";
+        this.container.style.userSelect = "none";
 
-        this.refreshSlide(numberOfSlides, htmlElement, slideNumber, displayType);
+        this.moveToSlide(this.slideNumber);
 
-        htmlElement.onclick = function (event) {
+        this.container.onclick = function (event) {
             slideNumber++;
 
-            if (slideNumber === numberOfSlides) {
+            if (slideNumber === slideCount) {
                 slideNumber = 0;
             }
 
-            for (let i = 0; i < numberOfSlides; i++) {
-                htmlElement.children[i].style.display = "none";
+            for (let i = 0; i < slideCount; i++) {
+                /** @type {HTMLElement} */ (slides[i]).style.display = "none";
             }
 
-            htmlElement.children[slideNumber].style.display = "block";
+            /** @type {HTMLElement} */ (slides[slideNumber]).style.display = displayType;
         }
     }
 
     /**
      * 
-     * @param {*} delay 
+     * @param {number} delay 
      */
-    this.auto = function (delay = 1000) {
+    auto(delay = 1000) {
+        let container = this.container;
+        let slideCount = this.slideCount;
         let slideNumber = this.slideNumber;
-        let numberOfSlides = this.numberOfSlides;
-        let htmlElement = this.htmlElement;
+        let slides = this.slides;
         let displayType = this.displayType;
 
-        this.refreshSlide(numberOfSlides, htmlElement, slideNumber, displayType);
+        this.moveToSlide(this.slideNumber);
 
         setInterval(function () {
             slideNumber++;
 
-            if (slideNumber === numberOfSlides) {
+            if (slideNumber === slideCount) {
                 slideNumber = 0;
             }
 
-            for (let i = 0; i < numberOfSlides; i++) {
-                htmlElement.children[i].style.display = "none";
+            for (let i = 0; i < slideCount; i++) {
+                /** @type {HTMLElement} */ (slides[i]).style.display = "none";
             }
 
-            htmlElement.children[slideNumber].style.display = "block";
+            /** @type {HTMLElement} */ (slides[slideNumber]).style.display = displayType;
         }, delay);
     }
 }

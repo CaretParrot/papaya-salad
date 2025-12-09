@@ -9,7 +9,6 @@
         <link rel='stylesheet' href='https://caretparrot.github.io/my-libraries/default.css'>
         <link rel='stylesheet' href='./style.css'>
         <script src="./script.js"></script>
-        <script src="./vector.js"></script>
     </head>
 
     <body>
@@ -29,27 +28,6 @@
             <p>Hahaha this is not empty...</p>
             <button id="previousPage">Previous Page</button>
         </div>
-
-        <script>
-            id.setupTree();
-            let slideshow = new SlideShow(id.slideshow);
-            let pageGroup = new PageGroup("pages", "grid");
-            slideshow.clickable();
-
-            id.nextPage.onclick = function () {
-                pageGroup.changePage("empty");
-                colorPalletes.paint();
-            }
-
-            id.previousPage.onclick = function () {
-                pageGroup.changePage("homePage");
-            }
-
-            binder.linkProperties(id.textBox, "value", id.textArea, "value");
-
-            let vector1 = new Vector([1, 1, 1], [1 + 1/Math.sqrt(3), 1 + 1 / Math.sqrt(3), 1 + 1 / Math.sqrt(3)]);
-            console.log(vector1.getMagnitude());
-        </script>
     </body>
 
 </html>
