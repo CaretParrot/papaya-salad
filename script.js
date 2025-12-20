@@ -223,5 +223,3 @@ const binder = {
         }
     }
 }
-
-export {PageGroup, SlideShow, randomPlus, colorPalletes, binder};
