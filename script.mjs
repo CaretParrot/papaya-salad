@@ -1,16 +1,12 @@
-/**
- * @param {string} pageClass 
- * @param {string} displayType 
- */
 class PageGroup {
     /**
      * @param {string} pageClass 
      * @param {string} displayType 
      */
-    constructor(pageClass, displayType = "block") {
+    constructor(pageClass, displayType = "block", initialPageId = document.getElementsByClassName(pageClass)[0].id) {
         this.pageClass = pageClass;
         this.displayType = displayType;
-        this.currentPageId = document.getElementsByClassName(pageClass)[0].id;
+        this.currentPageId = initialPageId;
         this.changePage(this.currentPageId);
     }
 
@@ -36,7 +32,6 @@ class PageGroup {
         return true;
     }
 }
-
 
 class SlideShow {
     /**
@@ -228,3 +223,5 @@ const binder = {
         }
     }
 }
+
+export {PageGroup, SlideShow, randomPlus, colorPalletes, binder};
