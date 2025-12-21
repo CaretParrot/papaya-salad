@@ -1,56 +1,55 @@
 "use strict";
 
-// @ts-check
-
-const mathPlus = {
+class MathPlus {
     /**
-     * Creates settings for rounding and the dx value for discrete calculus.
+     * @param {number} rounding 
      */
-    settings: {
-        rounding: 5,
-        dx: 10 ** -3
-    },
+    constructor(rounding = 5) {
+        this.rounding = rounding;
+    }
+
     /**
-     * 
      * @param {number} value
      * @param {number} power 
      * @returns {number}
-     *
      */
-    xroot: function (value, power) {
+    static xroot(value, power) {
         return Math.pow(value, 1 / power);
-    },
+    }
+
     /**
      * 
      * @param {number[]} array 
      * @returns {number}
      */
-    mean: function (array) {
+    static mean(array) {
         let total = 0;
         for (let i = 0; i < array.length; i++) {
             total += array[i];
         }
 
         return total / array.length;
-    },
+    }
+
     /**
      * 
      * @param {number[]} array 
      * @returns {number}
      */
-    median: function (array) {
+    static median(array) {
         if (array.length % 2 === 0) {
-            return mathPlus.mean([array[array.length / 2 - 1], array[array.length / 2]]);
+            return MathPlus.mean([array[array.length / 2 - 1], array[array.length / 2]]);
         } else {
             return Math.floor(array[(array.length - 1) / 2]);
         }
-    },
+    }
+
     /**
      * 
      * @param {number} number 
      * @returns {boolean}
      */
-    isSquare: function (number) {
+    static isSquare(number) {
         for (let i = 0; i < number; i++) {
             if (number / i == i) {
                 return true;
@@ -58,26 +57,28 @@ const mathPlus = {
         }
 
         return false;
-    },
+    }
+
     /**
      * 
      * @param {number[]} array 
      * @returns {number}
      */
-    geoMean: function (array) {
+    static geoMean(array) {
         let total = 1;
         for (let i = 0; i < array.length; i++) {
             total *= array[i];
         }
 
         return Math.pow(total, 1 / array.length);
-    },
+    }
+
     /**
      * 
      * @param {number} number 
      * @returns {number[]}
      */
-    factors: function (number) {
+    static factors(number) {
         let array = [];
         for (let i = 1; i < number; i++) {
             if (number % i === 0) {
@@ -86,13 +87,14 @@ const mathPlus = {
         }
 
         return array;
-    },
+    }
+
     /**
      * 
      * @param {number} number 
      * @returns {string}
      */
-    convertToFraction: function (number) {
+    static convertToFraction(number) {
         for (let i = 1; i < Number.MAX_SAFE_INTEGER; i++) {
             if (number * i % 1 === 0) {
                 return number * i + "/" + i;
@@ -101,13 +103,14 @@ const mathPlus = {
 
         console.warn("Fraction is too large to compute. The decimal was returned.");
         return number.toString();
-    },
+    }
+
     /**
      * 
      * @param {number} radicalSquared 
      * @returns {string}
      */
-    simpRadic: function (radicalSquared) {
+    static simpRadic(radicalSquared) {
         if (radicalSquared === 1) {
             console.warn("Given radical has only one square factor: 1. The radical is already simplified. The given number was returned");
             return radicalSquared.toString();
@@ -134,22 +137,24 @@ const mathPlus = {
         }
 
         return Math.max.apply(null, squareFactors) + "√" + radicalSquared / Math.max.apply(null, squareFactors);
-    },
+    }
+
     /**
      * 
      * @param {number} number1 
      * @param {number} number2 
      * @returns {number}
      */
-    hypotenuse: function (number1, number2) {
+    static hypotenuse(number1, number2) {
         return Math.sqrt(number1 ** 2 + number2 ** 2);
-    },
+    }
+
     /**
      * 
      * @param {number} number 
      * @returns 
      */
-    factorial: function (number) {
+    static factorial(number) {
         let total = 1;
         for (let i = 1; i <= number; i++) {
             total *= i;
@@ -159,46 +164,73 @@ const mathPlus = {
             }
         }
         return total;
-    },
+    }
+
     /**
      * 
      * @param {number} number 
      * @returns {number}
      */
-    roundToPlaces: function (number) {
-        if (Math.abs(number) > 0) {
-            return Math.round(number * (10 ** mathPlus.settings.rounding)) / (10 ** mathPlus.settings.rounding);
-        } else {
-            return number;
-        }
-    },
-    /**
-     * 
-     * @param {number} number 
-     * @returns {number}
-     */
-    toDegrees: function (number) {
+    static toDegrees(number) {
         return number * 180 / Math.PI;
-    },
+    }
+
     /**
      * 
      * @param {number} number 
      * @returns {number}
      */
-    toRadians: function (number) {
+    static toRadians(number) {
         return number * Math.PI / 180;
+    }
+
+    /**
+     * @param {number} number 
+     * @returns {number}
+     */
+    roundToPlaces(number) {
+        return Math.round(number * (10 ** this.rounding)) / (10 ** this.rounding);
+    }
+
+    /**
+     * @param {number} number 
+     * @param {number} numberOfPlaces
+     * @returns {number}
+     */
+    static roundToPlaces(number, numberOfPlaces) {
+        return Math.round(number * (10 ** numberOfPlaces)) / (10 ** numberOfPlaces);
     }
 }
 
 class MathFunction {
     /**
-     * 
      * @param {string} expression 
      * @param {string} variable 
+     * @param {number} rounding
+     * @param {number} d
      */
-    constructor(expression, variable) {
+    constructor(expression, variable, rounding = 5, d = 10 ** -3) {
         this.expression = expression;
         this.variable = variable;
+        this.rounding = rounding;
+        this.d = d;
+    }
+
+    /**
+     * @param {number} number 
+     * @returns {number}
+     */
+    roundToPlaces(number) {
+        return Math.round(number * (10 ** this.rounding)) / (10 ** this.rounding);
+    }
+
+    /**
+     * @param {number} number 
+     * @param {number} numberOfPlaces
+     * @returns {number}
+     */
+    static roundToPlaces(number, numberOfPlaces) {
+        return Math.round(number * (10 ** numberOfPlaces)) / (10 ** numberOfPlaces);
     }
 
     /**
@@ -207,7 +239,7 @@ class MathFunction {
      * @returns {number}
      */
     evaluate(inputVal) {
-        return mathPlus.roundToPlaces(Function(`return ${this.expression.replace(new RegExp(this.variable, "g"), inputVal.toString())};`)());
+        return this.roundToPlaces(Function(`return ${this.expression.replace(new RegExp(this.variable, "g"), inputVal.toString())};`)());
     }
 
     /**
@@ -216,11 +248,10 @@ class MathFunction {
      * @returns {number}
      */
     derivative(inputVal) {
-        return mathPlus.roundToPlaces((this.evaluate(inputVal + mathPlus.settings.dx) - this.evaluate(inputVal)) / mathPlus.settings.dx);
+        return this.roundToPlaces((this.evaluate(inputVal + this.d) - this.evaluate(inputVal)) / this.d);
     }
 
     /**
-     * 
      * @param {number} lowerBound 
      * @param {number} upperBound 
      * @returns {Promise<number>}
@@ -228,17 +259,17 @@ class MathFunction {
     async integral(lowerBound, upperBound) {
         let sum = 0;
         if (lowerBound < upperBound) {
-            for (let i = lowerBound; i <= upperBound - mathPlus.settings.dx; i += mathPlus.settings.dx) {
-                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + mathPlus.settings.dx)) * (mathPlus.settings.dx);
+            for (let i = lowerBound; i <= upperBound - this.d; i += this.d) {
+                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.d)) * (this.d);
             }
 
-            return mathPlus.roundToPlaces(sum);
+            return this.roundToPlaces(sum);
         } else if (lowerBound > upperBound) {
-            for (let i = upperBound; i <= lowerBound - mathPlus.settings.dx; i += mathPlus.settings.dx) {
-                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + mathPlus.settings.dx)) * (mathPlus.settings.dx);
+            for (let i = upperBound; i <= lowerBound - this.d; i += this.d) {
+                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.d)) * (this.d);
             }
 
-            return -mathPlus.roundToPlaces(sum);
+            return -this.roundToPlaces(sum);
         } else {
             return 0;
         }
@@ -262,7 +293,7 @@ class MathFunction {
             for (let i = lowerBound; i <= upperBound; i++) {
                 sum += Function(`return ${this.expression.replace(new RegExp(this.variable, "g"), i.toString())};`)();
             }
-            return mathPlus.roundToPlaces(sum);
+            return this.roundToPlaces(sum);
         }
     }
 
@@ -284,7 +315,7 @@ class MathFunction {
             for (let i = lowerBound; i <= upperBound; i++) {
                 product *= Function(`return ${this.expression.replace(new RegExp(this.variable, "g"), i.toString())};`)();
             }
-            return mathPlus.roundToPlaces(product);
+            return this.roundToPlaces(product);
         }
     }
 }

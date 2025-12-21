@@ -18,8 +18,8 @@ class PageGroup {
         let selectedElement = document.getElementById(pageId);
         if (selectedElement == null) {
             return false;
-        } 
-        
+        }
+
         let allPages = /** @type {HTMLCollectionOf<HTMLElement>} */ (document.getElementsByClassName(this.pageClass));
         for (let i = 0; i < allPages.length; i++) {
             allPages[i].style.display = "none";
