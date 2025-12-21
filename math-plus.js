@@ -1,19 +1,14 @@
 "use strict";
 
 class MathPlus {
-    /**
-     * @param {number} rounding 
-     */
-    constructor(rounding = 5) {
-        this.rounding = rounding;
-    }
+    constructor() { }
 
     /**
      * @param {number} value
      * @param {number} power 
      * @returns {number}
      */
-    static xroot(value, power) {
+    static root(value, power) {
         return Math.pow(value, 1 / power);
     }
 
@@ -22,7 +17,7 @@ class MathPlus {
      * @param {number[]} array 
      * @returns {number}
      */
-    static mean(array) {
+    static mean(...array) {
         let total = 0;
         for (let i = 0; i < array.length; i++) {
             total += array[i];
@@ -36,9 +31,23 @@ class MathPlus {
      * @param {number[]} array 
      * @returns {number}
      */
-    static median(array) {
+    static meanArray(array) {
+        let total = 0;
+        for (let i = 0; i < array.length; i++) {
+            total += array[i];
+        }
+
+        return total / array.length;
+    }
+
+    /**
+     * 
+     * @param {number[]} array 
+     * @returns {number}
+     */
+    static median(...array) {
         if (array.length % 2 === 0) {
-            return MathPlus.mean([array[array.length / 2 - 1], array[array.length / 2]]);
+            return MathPlus.meanArray([array[array.length / 2 - 1], array[array.length / 2]]);
         } else {
             return Math.floor(array[(array.length - 1) / 2]);
         }
@@ -51,7 +60,7 @@ class MathPlus {
      */
     static isSquare(number) {
         for (let i = 0; i < number; i++) {
-            if (number / i == i) {
+            if (number / i === i) {
                 return true;
             }
         }
@@ -64,7 +73,7 @@ class MathPlus {
      * @param {number[]} array 
      * @returns {number}
      */
-    static geoMean(array) {
+    static geoMean(...array) {
         let total = 1;
         for (let i = 0; i < array.length; i++) {
             total *= array[i];
@@ -107,33 +116,28 @@ class MathPlus {
 
     /**
      * 
-     * @param {number} radicalSquared 
+     * @param {number} radical 
      * @returns {string}
      */
-    static simpRadic(radicalSquared) {
-        if (radicalSquared === 1) {
-            console.warn("Given radical has only one square factor: 1. The radical is already simplified. The given number was returned");
-            return radicalSquared.toString();
-        }
+    static simpRadic(radical) {
+        let radicalSquared = radical ** 2;
 
-        for (let i = 0; i < radicalSquared; i++) {
-            if (radicalSquared / i == i) {
-                return radicalSquared.toString();
+        for (let i = 1; i <= radicalSquared; i++) {
+            if (radicalSquared / i === i) {
+                return Math.sqrt(radicalSquared).toString();
             }
         }
 
         let squareFactors = [];
-        for (let i = 0; i < this.factors(radicalSquared).length; i++) {
-            if (this.isSquare(this.factors(radicalSquared)[i])) {
-                squareFactors.push(this.factors(radicalSquared)[i]);
+        let factors = MathPlus.factors(radicalSquared);
+        for (let i = 0; i < factors.length; i++) {
+            if (MathPlus.isSquare(factors[i])) {
+                squareFactors.push(factors[i]);
             }
         }
 
         if (squareFactors.length === 1) {
-            console.warn(
-                "Given radical has only one square factor: 1. The radical is already simplified. The given number was returned."
-            );
-            return "√" + radicalSquared;
+            return Math.sqrt(radicalSquared).toString();
         }
 
         return Math.max.apply(null, squareFactors) + "√" + radicalSquared / Math.max.apply(null, squareFactors);
@@ -141,26 +145,26 @@ class MathPlus {
 
     /**
      * 
-     * @param {number} number1 
-     * @param {number} number2 
+     * @param {number} x 
+     * @param {number} y 
      * @returns {number}
      */
-    static hypotenuse(number1, number2) {
-        return Math.sqrt(number1 ** 2 + number2 ** 2);
+    static hypotenuse(x, y) {
+        return Math.sqrt(x ** 2 + y ** 2);
     }
 
     /**
      * 
      * @param {number} number 
-     * @returns 
+     * @returns {Promise<number>}
      */
-    static factorial(number) {
+    static async factorial(number) {
         let total = 1;
         for (let i = 1; i <= number; i++) {
             total *= i;
             if (total > Number.MAX_SAFE_INTEGER) {
                 console.warn(`Factorial is too large to compute. Factorial of the given number returned "Infinity".`);
-                return 0;
+                return Infinity;
             }
         }
         return total;
@@ -182,14 +186,6 @@ class MathPlus {
      */
     static toRadians(number) {
         return number * Math.PI / 180;
-    }
-
-    /**
-     * @param {number} number 
-     * @returns {number}
-     */
-    roundToPlaces(number) {
-        return Math.round(number * (10 ** this.rounding)) / (10 ** this.rounding);
     }
 
     /**
@@ -321,11 +317,17 @@ class MathFunction {
 }
 
 class Vector {
-    constructor(coords = [[0, 0, 0], [0, 0, 0]]) {
-        this.coords = [coords[0], coords[1]];
+    /**
+     * @param {number[][]} coords 
+     */
+    constructor(coords = [[0, 0, 0], [1, 1, 1]]) {
+        this.coords = coords;
         this.update();
     }
 
+    /**
+     * @return {void}
+     */
     update() {
         if (this.coords[0].length < 3) {
             for (let i = this.coords[0].length; i < 3; i++) {
@@ -340,42 +342,121 @@ class Vector {
         }
     }
 
-    setCoords(coords = [[0, 0, 0], [0, 0, 0]]) {
-        this.coords = [coords[0], coords[1]];
-        this.update();
-    }
-
-    getCoords() {
-        return this.coords;
-    }
-
-    getMagnitude() {
+    /**
+     * 
+     * @returns {number}
+     */
+    get magnitude() {
         return Math.pow((this.coords[1][0] - this.coords[0][0]) ** 2 + (this.coords[1][1] - this.coords[0][1]) ** 2 + (this.coords[1][2] - this.coords[0][2]) ** 2, 1 / 2);
     }
 
-    getPosVector() {
-        return new Vector([[0, 0, 0], [this.coords[1][0] - this.coords[0][0], this.coords[1][1] - this.coords[0][1], this.coords[1][2] - this.coords[0][2]]]);
-    }
+    /**
+     * 
+     * @returns {Vector}
+     */
+    get unitVector() {
+        let tempVector = new Vector(this.coords);
+        let magnitude = tempVector.magnitude;
 
-    getUnitVector() {
-        let tempVector = this.getPosVector();
-        let magnitude = tempVector.getMagnitude();
-
-        for (let i = 0; i < tempVector.getCoords()[1].length; i++) {
-            tempVector.getCoords()[1][i] /= magnitude;
+        for (let i = 0; i < this.coords.length; i++) {
+            this.coords[1][i] /= magnitude;
         }
 
         return tempVector;
     }
 
-    slope() {
+    /**
+     * 
+     * @returns {number}
+     */
+    get slope() {
         return (this.coords[1][1] - this.coords[0][1]) / (this.coords[1][0] - this.coords[0][0]);
     }
 
-    getTheta() {
-        return Math.atan(this.slope());
+    /**
+     * @returns {number}
+     */
+    get xyAngle() {
+        return Math.atan(this.slope);
     }
 }
+
+class PosVector {
+    /**
+     * @param {number[]} coords 
+     */
+    constructor(coords = [1, 1, 1]) {
+        this.coords = coords;
+        this.update();
+    }
+
+    /**
+     * @return {void}
+     */
+    update() {
+        if (this.coords.length < 3) {
+            for (let i = this.coords.length; i < 3; i++) {
+                this.coords[i] = 0;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @returns {number}
+     */
+    get magnitude() {
+        return Math.pow((this.coords[0]) ** 2 + (this.coords[1]) ** 2 + (this.coords[2]) ** 2, 1 / 2);
+    }
+
+    /**
+     * 
+     * @returns {PosVector}
+     */
+    get unitVector() {
+        let tempVector = new PosVector(this.coords);
+        let magnitude = tempVector.magnitude;
+
+        for (let i = 0; i < this.coords.length; i++) {
+            this.coords[i] /= magnitude;
+        }
+
+        return tempVector;
+    }
+
+    /**
+     * 
+     * @returns {number}
+     */
+    get slope() {
+        return (this.coords[1]) / (this.coords[0]);
+    }
+
+    /**
+     * @returns {number}
+     */
+    get xyAngle() {
+        return Math.atan(this.slope);
+    }
+
+    /**
+     * @param {PosVector} vector1 
+     * @param {PosVector} vector2
+     */
+    static dot(vector1, vector2) {
+        return vector1.coords[0] * vector2.coords[0] + vector1.coords[1] * vector2.coords[1] + vector1.coords[2] * vector2.coords[2];
+    }
+
+    /**
+     * 
+     * @param {PosVector} vector1 
+     * @param {PosVector} vector2 
+     */
+    static cross(vector1, vector2) {
+        return new PosVector([(vector1.coords[1] * vector2.coords[2]) - (vector1.coords[2] * vector2.coords[1]), (vector1.coords[2] * vector2.coords[0]) - (vector1.coords[0] * vector2.coords[2]), (vector1.coords[0] * vector2.coords[1]) - (vector1.coords[1] * vector2.coords[0])]);
+    }
+}
+
 class Graph {
     /**
      * 
@@ -384,11 +465,16 @@ class Graph {
      */
     constructor(parentElement) {
         this.element = document.createElement("canvas");
+        /**
+         * @type {Vector[]}
+         */
+        this.vectorList = [];
+
         this.element.style.transform = "scaleY(-1)";
         this.element.style.padding = "0";
         this.ctx = this.element.getContext("2d");
 
-        if (this.ctx == null) {
+        if (this.ctx === null) {
             console.error("Failed creation of canvas.");
             return;
         }
@@ -415,25 +501,25 @@ class Graph {
 
     /**
      * 
-     * @param {Vector[]} vectorList 
+     * @return {void}
      */
-    graphVectors(vectorList) {
-        if (this.ctx == null) {
+    graphVectors() {
+        if (this.ctx === null) {
             console.error("Failed creation of canvas.");
             return;
         }
 
-        for (let i = 0; i < vectorList.length; i++) {
+        for (let i = 0; i < this.vectorList.length; i++) {
             this.ctx.beginPath();
-            this.ctx.moveTo(vectorList[i].getCoords()[0][0], vectorList[i].getCoords()[0][1]);
-            this.ctx.lineTo(vectorList[i].getCoords()[1][0], vectorList[i].getCoords()[1][1]);
+            this.ctx.moveTo(this.vectorList[i].coords[0][0], this.vectorList[i].coords[0][1]);
+            this.ctx.lineTo(this.vectorList[i].coords[1][0], this.vectorList[i].coords[1][1]);
 
             this.ctx.stroke();
         }
     }
 
     clear() {
-        if (this.ctx == null) {
+        if (this.ctx === null) {
             console.error("Failed creation of canvas.");
             return;
         }
