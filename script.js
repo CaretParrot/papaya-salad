@@ -113,30 +113,34 @@ class SlideShow {
     }
 }
 
-const randomPlus = {
+class RandomPlus {
+    constructor() { }
+
     /**
      * 
      * @param {number} min 
      * @param {number} max 
      * @returns {number}
      */
-    randomInteger: function (min, max) {
-        return Math.floor(Math.random() * max) + min;
-    },
+    static randomInteger(min, max) {
+        return Math.floor(Math.random() * (max + 1)) + min;
+    }
+
     /**
      * 
      * @param {number} min 
      * @param {number} max 
      * @returns {number}
      */
-    randomNumber: function (min, max) {
+    static randomNumber(min, max) {
         return Math.random() * max + min;
-    },
+    }
+
     /**
      * 
      * @returns {string}
      */
-    randomCard: function () {
+    static randomCard() {
         let randomCardNumber = this.randomInteger(1, 13);
         let randomSuit = this.randomInteger(1, 4);
         let convertedNumber;
@@ -156,6 +160,7 @@ const randomPlus = {
                 convertedNumber = "King";
                 break;
             default:
+                convertedNumber = randomCardNumber
                 break;
         }
 
@@ -178,24 +183,33 @@ const randomPlus = {
 
         return `${convertedNumber} of ${convertedSuit}`;
     }
+
+    /**
+     * @returns {string}
+     */
+    static coinFlip() {
+        return RandomPlus.randomInteger(0, 1) === 0 ? "Heads" : "Tails";
+    }
+
+    /**
+     * @returns {boolean}
+     */
+    static booleanFlip() {
+        return RandomPlus.randomInteger(0, 1) === 0 ? true : false;
+    }
 }
 
-const colorPalletes = {
-    savedColor: 0,
+class ColorPalletes {
+    constructor() {}
+    
     /**
      * 
      * @param {number} color 
+     * @returns 
      */
-    paint: function (color = randomPlus.randomNumber(0, 360)) {
-        document.documentElement.style.setProperty(`--dark-1`, `hsl(${color}, 5%, 10%)`);
-        document.documentElement.style.setProperty(`--dark-2`, `hsl(${color}, 10%, 20%)`);
-        document.documentElement.style.setProperty(`--dark-3`, `hsl(${color}, 15%, 30%)`);
-        document.documentElement.style.setProperty(`--light-1`, `hsl(${color}, 70%, 85%)`);
-        document.documentElement.style.setProperty(`--light-2`, `hsl(${color}, 80%, 90%)`);
-        document.documentElement.style.setProperty(`--light-3`, `hsl(${color}, 90%, 95%)`);
-        document.documentElement.style.setProperty(`--dark-placeholder`, `hsl(240, 10%, 20%, 0.5)`);
-        document.documentElement.style.setProperty(`--light-placeholder`, `hsl(240, 80%, 90%, 0.5)`);
-        colorPalletes.savedColor = color;
+    static paint(color = RandomPlus.randomInteger(0, 360)) {
+        document.documentElement.style.setProperty("--hue-degree", color);
+        return color;
     }
 }
 
