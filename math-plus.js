@@ -320,9 +320,22 @@ class Vector {
     /**
      * @param {number[][]} coords 
      */
-    constructor(coords = [[0, 0, 0], [1, 1, 1]]) {
+    constructor(coords) {
+        if (coords === null || coords.length !== 2) {
+            throw "INIT_ERROR: Coordinates for tail and tip must be specified.";
+        }
+
+        for (let i = 0; i < coords.length; i++) {
+            for (let j = 0; j < coords[i].length; j++) {
+                if (typeof coords[i][j] !== "number") {
+                    throw "INIT_ERROR: Coordinates are not numeric types.";
+                }
+            }
+        }
+        
         this.coords = coords;
         this.update();
+        return this;
     }
 
     /**
@@ -343,7 +356,6 @@ class Vector {
     }
 
     /**
-     * 
      * @returns {number}
      */
     get magnitude() {
@@ -351,22 +363,6 @@ class Vector {
     }
 
     /**
-     * 
-     * @returns {Vector}
-     */
-    get unitVector() {
-        let tempVector = new Vector(this.coords);
-        let magnitude = tempVector.magnitude;
-
-        for (let i = 0; i < this.coords.length; i++) {
-            this.coords[1][i] /= magnitude;
-        }
-
-        return tempVector;
-    }
-
-    /**
-     * 
      * @returns {number}
      */
     get slope() {
@@ -379,15 +375,47 @@ class Vector {
     get xyAngle() {
         return Math.atan(this.slope);
     }
+
+    /**
+     * @returns {Vector}
+     */
+    getUnitVector() {
+        let tempVector = this.getPositionVector();
+        let magnitude = tempVector.magnitude;
+
+        for (let i = 0; i < tempVector.coords.length; i++) {
+            tempVector.coords[i] /= magnitude;
+        }
+
+        return new Vector([this.coords[0], [this.coords[0][0] + tempVector.coords[0], this.coords[0][1] + tempVector.coords[1], this.coords[0][2] + tempVector.coords[2]]]);
+    }
+
+    /**
+     * @returns {PosVector}
+     */
+    getPositionVector() {
+        return new PosVector([this.coords[1][0] - this.coords[0][0], this.coords[1][1] - this.coords[0][1], this.coords[1][2] - this.coords[0][2]]);
+    }
 }
 
 class PosVector {
     /**
      * @param {number[]} coords 
      */
-    constructor(coords = [1, 1, 1]) {
+    constructor(coords) {
+        if (Array.isArray(Array.isArray(coords))) {
+            throw "INIT_ERROR: Coordinates for tip must be specified.";
+        }
+
+        for (let i = 0; i < coords.length; i++) {
+            if (typeof coords[i] !== "number") {
+                throw "INIT_ERROR: Coordinates are not numeric types.";
+            }
+        }
+
         this.coords = coords;
         this.update();
+        return this;
     }
 
     /**
@@ -402,7 +430,13 @@ class PosVector {
     }
 
     /**
-     * 
+     * @returns {number[][]}
+     */
+    getVector() {
+        return [[0, 0, 0], this.coords];
+    }
+
+    /**
      * @returns {number}
      */
     get magnitude() {
@@ -413,23 +447,22 @@ class PosVector {
      * 
      * @returns {PosVector}
      */
-    get unitVector() {
-        let tempVector = new PosVector(this.coords);
+    getUnitVector() {
+        let tempVector = this;
         let magnitude = tempVector.magnitude;
 
-        for (let i = 0; i < this.coords.length; i++) {
-            this.coords[i] /= magnitude;
+        for (let i = 0; i < tempVector.coords.length; i++) {
+            tempVector.coords[i] /= magnitude;
         }
 
         return tempVector;
     }
 
     /**
-     * 
      * @returns {number}
      */
     get slope() {
-        return (this.coords[1]) / (this.coords[0]);
+        return this.coords[1] / this.coords[0];
     }
 
     /**
@@ -448,7 +481,6 @@ class PosVector {
     }
 
     /**
-     * 
      * @param {PosVector} vector1 
      * @param {PosVector} vector2 
      */
