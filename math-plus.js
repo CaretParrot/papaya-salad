@@ -318,24 +318,33 @@ class MathFunction {
 
 class Vector {
     /**
-     * @param {number[][]} coords 
+     * @param {number[]} tail 
+     * @param {number[]} tip
      */
-    constructor(coords) {
-        if (coords === null || coords.length !== 2) {
-            throw "INIT_ERROR: Coordinates for tail and tip must be specified.";
+    constructor(tail, tip) {
+        if (tail === undefined && tip === undefined) {
+            throw "INIT_ERROR: Tip coordinates must be specified.";
         }
 
-        for (let i = 0; i < coords.length; i++) {
-            for (let j = 0; j < coords[i].length; j++) {
-                if (typeof coords[i][j] !== "number") {
+        for (let i = 0; i < tail.length; i++) {
+            if (typeof tail[i] !== "number") {
+                throw "INIT_ERROR: Coordinates are not numeric types.";
+            }
+        }
+
+        if (tip === undefined) {
+            tip = tail;
+            tail = [0, 0, 0];
+        } else {
+            for (let i = 0; i < tip.length; i++) {
+                if (typeof tip[i] !== "number") {
                     throw "INIT_ERROR: Coordinates are not numeric types.";
                 }
             }
         }
-        
-        this.coords = coords;
+
+        this.coords = [tail, tip];
         this.update();
-        return this;
     }
 
     /**
@@ -366,14 +375,21 @@ class Vector {
      * @returns {number}
      */
     get slope() {
-        return (this.coords[1][1] - this.coords[0][1]) / (this.coords[1][0] - this.coords[0][0]);
+        return (this.coords[1][2] - this.coords[0][2]) / (Math.pow((this.coords[1][0] - this.coords[0][0]) ** 2 + (this.coords[1][1] - this.coords[0][1]) ** 2, 1 / 2));
     }
 
     /**
      * @returns {number}
      */
-    get xyAngle() {
-        return Math.atan(this.slope);
+    get theta() {
+        return Math.atan((this.coords[1][1] - this.coords[0][1]) / (this.coords[1][0] - this.coords[0][0]));
+    }
+
+    /**
+     * @returns {number}
+     */
+    get phi() {
+        return (Math.PI / 2) - Math.atan(this.slope);
     }
 
     /**
@@ -384,108 +400,41 @@ class Vector {
         let magnitude = tempVector.magnitude;
 
         for (let i = 0; i < tempVector.coords.length; i++) {
-            tempVector.coords[i] /= magnitude;
+            tempVector.coords[1][i] /= magnitude;
         }
 
-        return new Vector([this.coords[0], [this.coords[0][0] + tempVector.coords[0], this.coords[0][1] + tempVector.coords[1], this.coords[0][2] + tempVector.coords[2]]]);
+        return new Vector(this.coords[0], [this.coords[0][0] + tempVector.coords[1][0], this.coords[0][1] + tempVector.coords[1][1], this.coords[0][2] + tempVector.coords[1][2]]);
     }
 
     /**
-     * @returns {PosVector}
+     * @returns {Vector}
      */
     getPositionVector() {
-        return new PosVector([this.coords[1][0] - this.coords[0][0], this.coords[1][1] - this.coords[0][1], this.coords[1][2] - this.coords[0][2]]);
-    }
-}
-
-class PosVector {
-    /**
-     * @param {number[]} coords 
-     */
-    constructor(coords) {
-        if (Array.isArray(Array.isArray(coords))) {
-            throw "INIT_ERROR: Coordinates for tip must be specified.";
-        }
-
-        for (let i = 0; i < coords.length; i++) {
-            if (typeof coords[i] !== "number") {
-                throw "INIT_ERROR: Coordinates are not numeric types.";
-            }
-        }
-
-        this.coords = coords;
-        this.update();
-        return this;
+        return new Vector([0, 0, 0], [this.coords[1][0] - this.coords[0][0], this.coords[1][1] - this.coords[0][1], this.coords[1][2] - this.coords[0][2]]);
     }
 
     /**
-     * @return {void}
-     */
-    update() {
-        if (this.coords.length < 3) {
-            for (let i = this.coords.length; i < 3; i++) {
-                this.coords[i] = 0;
-            }
-        }
-    }
-
-    /**
-     * @returns {number[][]}
-     */
-    getVector() {
-        return [[0, 0, 0], this.coords];
-    }
-
-    /**
-     * @returns {number}
-     */
-    get magnitude() {
-        return Math.pow((this.coords[0]) ** 2 + (this.coords[1]) ** 2 + (this.coords[2]) ** 2, 1 / 2);
-    }
-
-    /**
-     * 
-     * @returns {PosVector}
-     */
-    getUnitVector() {
-        let tempVector = this;
-        let magnitude = tempVector.magnitude;
-
-        for (let i = 0; i < tempVector.coords.length; i++) {
-            tempVector.coords[i] /= magnitude;
-        }
-
-        return tempVector;
-    }
-
-    /**
-     * @returns {number}
-     */
-    get slope() {
-        return this.coords[1] / this.coords[0];
-    }
-
-    /**
-     * @returns {number}
-     */
-    get xyAngle() {
-        return Math.atan(this.slope);
-    }
-
-    /**
-     * @param {PosVector} vector1 
-     * @param {PosVector} vector2
+     * @param {Vector} vector1 
+     * @param {Vector} vector2
      */
     static dot(vector1, vector2) {
-        return vector1.coords[0] * vector2.coords[0] + vector1.coords[1] * vector2.coords[1] + vector1.coords[2] * vector2.coords[2];
+        if (!Object.is(vector1.coords[0], [0, 0, 0]) || !Object.is(vector2.coords[0], [0, 0, 0])) {
+            throw "OPERATION_ERROR: Both vectors must be position vectors."
+        }
+
+        return vector1.coords[1][0] * vector2.coords[1][0] + vector1.coords[1][1] * vector2.coords[1][1] + vector1.coords[1][2] * vector2.coords[1][2];
     }
 
     /**
-     * @param {PosVector} vector1 
-     * @param {PosVector} vector2 
+     * @param {Vector} vector1 
+     * @param {Vector} vector2 
      */
     static cross(vector1, vector2) {
-        return new PosVector([(vector1.coords[1] * vector2.coords[2]) - (vector1.coords[2] * vector2.coords[1]), (vector1.coords[2] * vector2.coords[0]) - (vector1.coords[0] * vector2.coords[2]), (vector1.coords[0] * vector2.coords[1]) - (vector1.coords[1] * vector2.coords[0])]);
+        if (!Object.is(vector1.coords[0], [0, 0, 0]) || !Object.is(vector2.coords[0], [0, 0, 0])) {
+            throw "OPERATION_ERROR: Both vectors must be position vectors."
+        }
+
+        return new Vector([0, 0, 0], [(vector1.coords[1][1] * vector2.coords[1][2]) - (vector1.coords[1][2] * vector2.coords[1][1]), (vector1.coords[1][2] * vector2.coords[1][0]) - (vector1.coords[1][0] * vector2.coords[1][2]), (vector1.coords[1][0] * vector2.coords[1][1]) - (vector1.coords[1][1] * vector2.coords[1][0])]);
     }
 }
 
