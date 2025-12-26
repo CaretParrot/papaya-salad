@@ -20,15 +20,34 @@
                 <h1>I'm glad you are here!</h1>
             </div>
             <input id="textBox" value="hmmm">
-            <textarea id="textArea"></textarea>
+            <textarea id="textArea" value="hi"></textarea>
             <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
                 Javascript a little easier!</p>
-            <button id="nextPage">Next Page</button>
+            <button id="nextPage" onclick="pg.changePage('empty')">Next Page</button>
+            <input type="file" onchange="getFile()" id="fileInput">
         </div>
         <div id="empty" class="page">
             <p>Hahaha this is not empty...</p>
-            <button id="previousPage">Previous Page</button>
+            <button id="previousPage" onclick="pg.changePage('homePage')">Previous Page</button>
         </div>
+
+        <script>
+            let slideshow = new SlideShow(document.getElementById("slideshow"));
+            slideshow.clickable();
+
+            let pg = new PageGroup("page", "grid");
+            let db = new Database();
+
+            function getFile() {
+                db.importFile(document.getElementById("fileInput").files[0]);
+            }
+
+            let map = new Map();
+            map.set(document.getElementById("textBox"), "value");
+            map.set(document.getElementById("textArea"), "value");
+
+            let binder = new Binder(map);
+        </script>
     </body>
 
 </html>

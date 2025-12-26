@@ -40,7 +40,7 @@ class SlideShow {
      */
     constructor(container, displayType = "block") {
         this.container = container;
-        this.slides = /** @type {HTMLCollectionOf<HTMLElement>} */ this.container.querySelectorAll("*");
+        this.slides = this.container.querySelectorAll("*");
         this.slideNumber = 0;
         this.slideCount = this.slides.length;
         this.displayType = displayType;
@@ -200,40 +200,41 @@ class RandomPlus {
 }
 
 class ColorPalletes {
-    constructor() {}
-    
+    constructor() { }
+
     /**
      * 
      * @param {number} color 
      * @returns 
      */
     static paint(color = RandomPlus.randomInteger(0, 360)) {
-        document.documentElement.style.setProperty("--hue-degree", color);
+        document.documentElement.style.setProperty("--hue-degree", color.toString());
         return color;
     }
 }
 
-const binder = {
+class Binder {
     /**
-     * 
-     * @param {*} element1 
-     * @param {*} property1 
-     * @param {*} element2 
-     * @param {*} property2 
-     * @param {boolean} twoWay 
+     * @param {Map<HTMLElement, string>} mapping
      */
-    linkProperties: function (element1, property1, element2, property2, twoWay = true) {
-        element2[property2] = element1[property1];
-        element1[property1] = element2[property2];
-
-        element1.oninput = function () {
-            element2[property2] = element1[property1];
-        }
-
-        if (twoWay) {
-            element2.oninput = function () {
-                element1[property1] = element2[property2];
+    constructor(mapping) {
+        mapping.forEach((property1, element1, map1) => {
+            element1.oninput = () => {
+                this.update();
             }
-        }
+            mapping.forEach((property2, element2, map2) => {
+                element1.setAttribute(property1, /** @type {string} */(element2.getAttribute(property2)));
+            });
+        });
+
+        this.mapping = mapping;
+    }
+
+    update() {
+        this.mapping.forEach((property1, element1, map1) => {
+            this.mapping.forEach((property2, element2, map2) => {
+                element1.setAttribute(property1, /** @type {string} */(element2.getAttribute(property2)));
+            });
+        });
     }
 }
