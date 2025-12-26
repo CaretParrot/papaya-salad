@@ -20,7 +20,8 @@
                 <h1>I'm glad you are here!</h1>
             </div>
             <input id="textBox" value="hmmm">
-            <textarea id="textArea" value="hi"></textarea>
+            <input id="textBox2" value="hm">
+            <textarea id="textArea" value="hi">Hi</textarea>
             <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
                 Javascript a little easier!</p>
             <button id="nextPage" onclick="pg.changePage('empty')">Next Page</button>
@@ -44,6 +45,7 @@
 
             let map = new Map();
             map.set(document.getElementById("textBox"), "value");
+            map.set(document.getElementById("textBox2"), "value");
             map.set(document.getElementById("textArea"), "value");
 
             let binder = new Binder(map);

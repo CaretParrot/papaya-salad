@@ -218,23 +218,36 @@ class Binder {
      * @param {Map<HTMLElement, string>} mapping
      */
     constructor(mapping) {
-        mapping.forEach((property1, element1, map1) => {
-            element1.oninput = () => {
-                this.update();
+        if (mapping.keys().next().value === undefined || mapping.values().next().value === undefined) {
+            throw "Must list a mapping for a binder.";
+        }
+
+        // @ts-ignore
+        this.masterVal = mapping.keys().next().value[mapping.values().next().value];
+        this.mapping = mapping;
+
+        mapping.forEach((property, element, map) => {
+            element.oninput = () => {
+                // @ts-ignore
+                this.update(element[property]);
             }
-            mapping.forEach((property2, element2, map2) => {
-                element1.setAttribute(property1, /** @type {string} */(element2.getAttribute(property2)));
-            });
+
+            // @ts-ignore
+            element[property] = this.masterVal;
         });
 
-        this.mapping = mapping;
     }
 
-    update() {
-        this.mapping.forEach((property1, element1, map1) => {
-            this.mapping.forEach((property2, element2, map2) => {
-                element1.setAttribute(property1, /** @type {string} */(element2.getAttribute(property2)));
-            });
+    /**
+     * 
+     * @param {string} value 
+     */
+    update(value) {
+        this.masterVal = value;
+
+        this.mapping.forEach((property, element, map) => {
+            // @ts-ignore
+            element[property] = this.masterVal;
         });
     }
 }
