@@ -2,15 +2,13 @@
 
 :root {
     color-scheme: light dark;
-    --hue: 270;
-    --accent-hue: 300;
-    --saturation: 10%;
-    --background: light-dark(oklch(85% var(--saturation) var(--hue)), oklch(15% var(--saturation) var(--hue)));
-    --element: light-dark(oklch(95% var(--saturation) var(--hue)), oklch(25% var(--saturation) var(--hue)));
-    --accent: light-dark(oklch(95% var(--saturation) var(--accent-hue)), oklch(25% var(--saturation) var(--accent-hue)));
-    --text: light-dark(oklch(25% var(--saturation) var(--hue)), oklch(95% var(--saturation) var(--hue)));
-    --text-accent: light-dark(oklch(25% var(--saturation) var(--accent-hue)), oklch(95% var(--saturation) var(--accent-hue)));
-    --placeholder: light-dark(oklch(25% var(--saturation) var(--hue) 50%), oklch(95% var(--saturation) var(--hue) 50%));
+    --hue: 280;
+    --accent-hue: 290;
+    --background: light-dark(oklch(95% 15% var(--hue)), oklch(15% 15% var(--hue)));
+    --element: light-dark(oklch(85% 15% var(--hue)), oklch(25% 15% var(--hue)));
+    --accent-element: light-dark(oklch(85% 15% var(--accent-hue)), oklch(25% 15% var(--accent-hue)));
+    --text: light-dark(oklch(25% 15% var(--hue)), oklch(85% 15% var(--hue)));
+    --accent-text: light-dark(oklch(25% 15% var(--accent-hue)), oklch(85% 15% var(--accent-hue)));
     --base-unit: 1rem;
 }
 
@@ -33,13 +31,13 @@ body * {
     font-style: normal;
     border: none;
     border-radius: var(--base-unit);
+    padding: var(--base-unit);
+    font-size: var(--base-unit);
     transition: 0.5s;
     flex: 1 1 auto;
     text-align: center;
     line-height: 1.5em;
     margin: 0;
-    padding: var(--base-unit);
-    font-size: var(--base-unit);
     outline: none;
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -63,25 +61,21 @@ body * {
     background-color: var(--text);
 }
 
-::placeholder {
-    color: var(--placeholder);
-}
-
 html {
     margin: 0;
     padding: 0;
-    background-color: transparent;
+    background-color: var(--background);
     width: 100%;
     height: 100%;
     font-size: 100%;
 }
 
 body {
-    background-color: var(--background);
+    background-color: transparent;
     margin: 0;
-    padding: var(--base-unit);
     width: 100%;
     display: grid;
+    padding: var(--base-unit);
     grid-gap: var(--base-unit);
 }
 
@@ -130,7 +124,7 @@ input,
 select,
 button {
     color: var(--text-accent);
-    background-color: var(--accent);
+    background-color: var(--accent-element);
 }
 
 .two-column {
@@ -154,6 +148,7 @@ button {
 }
 
 @media (orientation: portrait) {
+
     .two-column,
     .three-column,
     .four-column {

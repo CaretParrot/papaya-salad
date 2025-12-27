@@ -1,3 +1,5 @@
+"use strict";
+
 class PageGroup {
     /**
      * @param {string} pageClass 
@@ -218,7 +220,7 @@ class Binder {
      * @param {Map<HTMLElement, string>} mapping
      */
     constructor(mapping) {
-        if (mapping.keys().next().value === undefined || mapping.values().next().value === undefined) {
+        if (mapping === undefined || mapping.keys().next().value === undefined || mapping.values().next().value === undefined) {
             throw "Must list a mapping for a binder.";
         }
 

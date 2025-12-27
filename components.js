@@ -1,6 +1,7 @@
 class Database {
     constructor() {
         this.data = new Array(new Array());
+        this.headerRow = null;
     }
 
     /**
@@ -11,19 +12,40 @@ class Database {
         this.data = new Array(new Array());
         let temp = data.split(lineDelimiter);
 
-        if (temp.length === 1) {
-            console.warn("Line delimiter yielded only one row.");
-        }
-
         for (let i = 0; i < temp.length; i++) {
             this.data[i] = temp[i].split(delimiter);
-
-            if (this.data[i].length === 1) {
-                console.warn("Delimiter yielded only one column.");
-            }
         }
 
         return this.data;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get rowCount() {
+        return this.data.length;
+    }
+
+    /**
+     * @returns {number}
+     */
+    get columnCount() {
+        let maxCount = 0;
+
+        for (let i = 0; i < this.data.length; i++) {
+            if (this.data[i].length > maxCount) {
+                maxCount = this.data[i].length;
+            }
+        }
+
+        return maxCount;
+    }
+
+    /**
+     * @returns {number[]}
+     */
+    get dimensions() {
+        return [this.rowCount, this.columnCount];
     }
 
     /**
@@ -45,5 +67,14 @@ class Database {
         fr.readAsText(file);
 
         return this.data;
+    }
+
+    /**
+     * @returns {string[]}
+     */
+    setHeaderRow() {
+        this.headerRow = this.data[0];
+        this.data = this.data.splice(1);
+        return this.headerRow;
     }
 }

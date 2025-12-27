@@ -437,7 +437,6 @@ class Vector {
         return new Vector([0, 0, 0], [(vector1.coords[1][1] * vector2.coords[1][2]) - (vector1.coords[1][2] * vector2.coords[1][1]), (vector1.coords[1][2] * vector2.coords[1][0]) - (vector1.coords[1][0] * vector2.coords[1][2]), (vector1.coords[1][0] * vector2.coords[1][1]) - (vector1.coords[1][1] * vector2.coords[1][0])]);
     }
 }
-
 class Graph {
     /**
      * 
