@@ -3,12 +3,17 @@
 :root {
     color-scheme: light dark;
     --hue: 280;
-    --accent-hue: 290;
-    --background: light-dark(oklch(95% 15% var(--hue)), oklch(15% 15% var(--hue)));
-    --element: light-dark(oklch(85% 15% var(--hue)), oklch(25% 15% var(--hue)));
-    --accent-element: light-dark(oklch(85% 15% var(--accent-hue)), oklch(25% 15% var(--accent-hue)));
-    --text: light-dark(oklch(25% 15% var(--hue)), oklch(85% 15% var(--hue)));
-    --accent-text: light-dark(oklch(25% 15% var(--accent-hue)), oklch(85% 15% var(--accent-hue)));
+    --accent-hue: 300;
+    --chroma: 15%;
+    --light: 100%;
+    --dark: 15%;
+    --light-element: 85%;
+    --dark-element: 30%;
+    --background: light-dark(oklch(var(--light) var(--chroma) var(--hue)), oklch(var(--dark) var(--chroma) var(--hue)));
+    --element: light-dark(oklch(var(--light-element) var(--chroma) var(--hue)), oklch(var(--dark-element) var(--chroma) var(--hue)));
+    --accent-element: light-dark(oklch(var(--light-element) var(--chroma) var(--accent-hue)), oklch(var(--dark-element) var(--chroma) var(--accent-hue)));
+    --text: light-dark(oklch(var(--dark-element) var(--chroma) var(--hue)), oklch(var(--light-element) var(--chroma) var(--hue)));
+    --accent-text: light-dark(oklch(var(--dark-element) var(--chroma) var(--accent-hue)), oklch(var(--light-element) var(--chroma) var(--accent-hue)));
     --base-unit: 1rem;
 }
 

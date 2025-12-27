@@ -206,12 +206,14 @@ class ColorPalletes {
 
     /**
      * 
-     * @param {number} color 
-     * @returns 
+     * @param {number} hue
+     * @param {number} accentHue 
+     * @returns {number[]}
      */
-    static paint(color = RandomPlus.randomInteger(0, 360)) {
-        document.documentElement.style.setProperty("--hue-degree", color.toString());
-        return color;
+    static paint(hue = RandomPlus.randomInteger(0, 360), accentHue = hue + 20) {
+        document.documentElement.style.setProperty("--hue", hue.toString());
+        document.documentElement.style.setProperty("--accent-hue", accentHue.toString());
+        return [hue, accentHue];
     }
 }
 

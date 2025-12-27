@@ -57,7 +57,7 @@ class Database {
         let fr = new FileReader();
 
         fr.onload = () => {
-            this.import( /** @type {string} */ (fr.result), delimiter, lineDelimiter);
+            this.import( /** @type {string} */(fr.result), delimiter, lineDelimiter);
         }
 
         fr.onerror = () => {

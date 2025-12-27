@@ -26,6 +26,7 @@
                 Javascript a little easier!</p>
             <button id="nextPage" onclick="pg.changePage('empty')">Next Page</button>
             <input type="file" onchange="getFile()" id="fileInput">
+            <input type="range" min="0" max="360" id="slider">
         </div>
         <div id="empty" class="page">
             <p>Hahaha this is not empty...</p>
@@ -41,6 +42,10 @@
 
             function getFile() {
                 db.importFile(document.getElementById("fileInput").files[0]);
+            }
+
+            document.getElementById("slider").oninput = () => {
+                ColorPalletes.paint(+document.getElementById("slider").value)
             }
         </script>
     </body>
