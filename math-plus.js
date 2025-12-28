@@ -392,6 +392,16 @@ class Vector {
         return (Math.PI / 2) - Math.atan(this.slope);
     }
 
+    get isPositionVector() {
+        for (let i = 0; i < this.coords[0].length; i++) {
+            if (this.coords[0][i] !== 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @returns {Vector}
      */
@@ -418,11 +428,17 @@ class Vector {
      * @param {Vector} vector2
      */
     static dot(vector1, vector2) {
-        if (!Object.is(vector1.coords[0], [0, 0, 0]) || !Object.is(vector2.coords[0], [0, 0, 0])) {
-            throw "OPERATION_ERROR: Both vectors must be position vectors."
+        let posVector1;
+        let posVector2;
+
+        if (!vector1.isPositionVector || !vector2.isPositionVector) {
+            console.warn("Vectors were converted into position vectors before calculation.");
         }
 
-        return vector1.coords[1][0] * vector2.coords[1][0] + vector1.coords[1][1] * vector2.coords[1][1] + vector1.coords[1][2] * vector2.coords[1][2];
+        posVector1 = vector1.getPositionVector();
+        posVector2 = vector2.getPositionVector();
+
+        return posVector1.coords[1][0] * posVector2.coords[1][0] + posVector1.coords[1][1] * posVector2.coords[1][1] + posVector1.coords[1][2] * posVector2.coords[1][2];
     }
 
     /**
@@ -430,11 +446,17 @@ class Vector {
      * @param {Vector} vector2 
      */
     static cross(vector1, vector2) {
-        if (!Object.is(vector1.coords[0], [0, 0, 0]) || !Object.is(vector2.coords[0], [0, 0, 0])) {
-            throw "OPERATION_ERROR: Both vectors must be position vectors."
+        let posVector1;
+        let posVector2;
+
+        if (!vector1.isPositionVector || !vector2.isPositionVector) {
+            console.warn("Vectors were converted into position vectors before calculation.");
         }
 
-        return new Vector([0, 0, 0], [(vector1.coords[1][1] * vector2.coords[1][2]) - (vector1.coords[1][2] * vector2.coords[1][1]), (vector1.coords[1][2] * vector2.coords[1][0]) - (vector1.coords[1][0] * vector2.coords[1][2]), (vector1.coords[1][0] * vector2.coords[1][1]) - (vector1.coords[1][1] * vector2.coords[1][0])]);
+        posVector1 = vector1.getPositionVector();
+        posVector2 = vector2.getPositionVector();
+
+        return new Vector([0, 0, 0], [(posVector1.coords[1][1] * posVector2.coords[1][2]) - (posVector1.coords[1][2] * posVector2.coords[1][1]), (posVector1.coords[1][2] * posVector2.coords[1][0]) - (posVector1.coords[1][0] * posVector2.coords[1][2]), (posVector1.coords[1][0] * posVector2.coords[1][1]) - (posVector1.coords[1][1] * posVector2.coords[1][0])]);
     }
 }
 class Graph {
