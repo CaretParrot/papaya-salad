@@ -461,71 +461,85 @@ class Vector {
 }
 class Graph {
     /**
-     * 
      * @param {Element} parentElement 
-     * @returns 
      */
-    constructor(parentElement) {
+    constructor(parentElement, width = 300, height = 300, color = "white", lineWidth = 5) {
         this.element = document.createElement("canvas");
         /**
          * @type {Vector[]}
          */
         this.vectorList = [];
+        this.width = width;
+        this.height = height;
+        this.color = color;
+        this.lineWidth = lineWidth;
 
         this.element.style.transform = "scaleY(-1)";
         this.element.style.padding = "0";
         this.ctx = this.element.getContext("2d");
 
         if (this.ctx === null) {
-            console.error("Failed creation of canvas.");
-            return;
+            throw "INIT_ERROR: Could not create paint context."
         }
 
-        this.ctx.strokeStyle = "white";
+        this.ctx.lineWidth = this.lineWidth;
         parentElement.appendChild(this.element);
     }
 
+    /**
+     * @returns {number}
+     */
     get width() {
         return this.element.width;
     }
 
+    /**
+     * @param {number} width
+     * @returns {void}
+     */
     set width(width) {
         this.element.width = width;
     }
 
+    /**
+     * @returns {number}
+     */
     get height() {
         return this.element.height;
     }
 
+    /**
+     * @param {number} height
+     * @returns {void}
+     */
     set height(height) {
         this.element.height = height;
     }
 
     /**
-     * 
+     * @returns {Vector[]}
+     */
+    get vectors() {
+        return this.vectorList;
+    }
+
+    /**
+     * @param {Vector[]} vectors
      * @return {void}
      */
-    graphVectors() {
-        if (this.ctx === null) {
-            console.error("Failed creation of canvas.");
-            return;
-        }
-
+    set vectors(vectors) {
+        this.vectorList = vectors;
         for (let i = 0; i < this.vectorList.length; i++) {
+            this.ctx.strokeStyle = this.color;
+            this.ctx.lineWidth = this.lineWidth;
             this.ctx.beginPath();
             this.ctx.moveTo(this.vectorList[i].coords[0][0], this.vectorList[i].coords[0][1]);
             this.ctx.lineTo(this.vectorList[i].coords[1][0], this.vectorList[i].coords[1][1]);
-
             this.ctx.stroke();
         }
     }
 
     clear() {
-        if (this.ctx === null) {
-            console.error("Failed creation of canvas.");
-            return;
-        }
-
         this.ctx.clearRect(0, 0, this.width, this.height);
     }
 }
