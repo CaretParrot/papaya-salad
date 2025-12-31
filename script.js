@@ -1,15 +1,19 @@
 "use strict";
 
 class PageGroup {
+    #pageClass;
+    #displayType;
+    #currentPageId;
+
     /**
      * @param {string} pageClass 
      * @param {string} displayType 
      */
     constructor(pageClass, displayType = "block", initialPageId = document.getElementsByClassName(pageClass)[0].id) {
-        this.pageClass = pageClass;
-        this.displayType = displayType;
-        this.currentPageId = initialPageId;
-        this.changePage(this.currentPageId);
+        this.#pageClass = pageClass;
+        this.#displayType = displayType;
+        this.#currentPageId = initialPageId;
+        this.changePage(this.#currentPageId);
     }
 
     /**
@@ -22,13 +26,13 @@ class PageGroup {
             return false;
         }
 
-        let allPages = /** @type {HTMLCollectionOf<HTMLElement>} */ (document.getElementsByClassName(this.pageClass));
+        let allPages = /** @type {HTMLCollectionOf<HTMLElement>} */ (document.getElementsByClassName(this.#pageClass));
         for (let i = 0; i < allPages.length; i++) {
             allPages[i].style.display = "none";
             /** @type {HTMLElement} */ (document.getElementById(pageId)).classList.remove("open");
         }
 
-        selectedElement.style.display = this.displayType;
+        selectedElement.style.display = this.#displayType;
         selectedElement.classList.add("open");
         this.currentPageId = pageId;
         return true;
@@ -36,16 +40,22 @@ class PageGroup {
 }
 
 class SlideShow {
+    #container;
+    #slides;
+    #slideNumber;
+    #slideCount;
+    #displayType;
+
     /**
      * @param {HTMLElement} container 
      * @param {string} displayType 
      */
     constructor(container, displayType = "block") {
-        this.container = container;
-        this.slides = this.container.querySelectorAll("*");
-        this.slideNumber = 0;
-        this.slideCount = this.slides.length;
-        this.displayType = displayType;
+        this.#container = container;
+        this.#slides = this.#container.querySelectorAll("*");
+        this.#slideNumber = 0;
+        this.#slideCount = this.#slides.length;
+        this.#displayType = displayType;
     }
 
     /**
@@ -53,25 +63,25 @@ class SlideShow {
      * @param {number} slideNumber 
      */
     moveToSlide(slideNumber) {
-        for (let i = 0; i < this.slideCount; i++) {
-            /** @type {HTMLElement} */ (this.container.children[i]).style.display = "none";
+        for (let i = 0; i < this.#slideCount; i++) {
+            /** @type {HTMLElement} */ (this.#container.children[i]).style.display = "none";
         }
 
-        /** @type {HTMLElement} */ (this.container.children[slideNumber]).style.display = this.displayType;
+        /** @type {HTMLElement} */ (this.#container.children[slideNumber]).style.display = this.#displayType;
     }
 
     clickable() {
-        let slideCount = this.slideCount;
-        let slideNumber = this.slideNumber;
-        let slides = this.slides;
-        let displayType = this.displayType;
+        let slideCount = this.#slideCount;
+        let slideNumber = this.#slideNumber;
+        let slides = this.#slides;
+        let displayType = this.#displayType;
 
-        this.container.style.cursor = "pointer";
-        this.container.style.userSelect = "none";
+        this.#container.style.cursor = "pointer";
+        this.#container.style.userSelect = "none";
 
-        this.moveToSlide(this.slideNumber);
+        this.moveToSlide(this.#slideNumber);
 
-        this.container.onclick = function (event) {
+        this.#container.onclick = function (event) {
             slideNumber++;
 
             if (slideNumber === slideCount) {
@@ -91,13 +101,12 @@ class SlideShow {
      * @param {number} delay 
      */
     auto(delay = 1000) {
-        let container = this.container;
-        let slideCount = this.slideCount;
-        let slideNumber = this.slideNumber;
-        let slides = this.slides;
-        let displayType = this.displayType;
+        let slideCount = this.#slideCount;
+        let slideNumber = this.#slideNumber;
+        let slides = this.#slides;
+        let displayType = this.#displayType;
 
-        this.moveToSlide(this.slideNumber);
+        this.moveToSlide(this.#slideNumber);
 
         setInterval(function () {
             slideNumber++;
@@ -116,8 +125,6 @@ class SlideShow {
 }
 
 class RandomPlus {
-    constructor() { }
-
     /**
      * 
      * @param {number} min 
@@ -201,23 +208,10 @@ class RandomPlus {
     }
 }
 
-class ColorPalletes {
-    constructor() { }
-
-    /**
-     * 
-     * @param {number} hue
-     * @param {number} accentHue 
-     * @returns {number[]}
-     */
-    static paint(hue = RandomPlus.randomInteger(0, 360), accentHue = hue + 20) {
-        document.documentElement.style.setProperty("--hue", hue.toString());
-        document.documentElement.style.setProperty("--accent-hue", accentHue.toString());
-        return [hue, accentHue];
-    }
-}
-
 class Binder {
+    #masterVal;
+    #mapping;
+
     /**
      * @param {Map<HTMLElement, string>} mapping
      */
@@ -227,8 +221,8 @@ class Binder {
         }
 
         // @ts-ignore
-        this.masterVal = mapping.keys().next().value[mapping.values().next().value];
-        this.mapping = mapping;
+        this.#masterVal = mapping.keys().next().value[mapping.values().next().value];
+        this.#mapping = mapping;
 
         mapping.forEach((property, element, map) => {
             element.oninput = () => {
@@ -237,7 +231,7 @@ class Binder {
             }
 
             // @ts-ignore
-            element[property] = this.masterVal;
+            element[property] = this.#masterVal;
         });
 
     }
@@ -247,9 +241,9 @@ class Binder {
      * @param {string} value 
      */
     update(value) {
-        this.masterVal = value;
+        this.#masterVal = value;
 
-        this.mapping.forEach((property, element, map) => {
+        this.#mapping.forEach((property, element, map) => {
             // @ts-ignore
             element[property] = this.masterVal;
         });

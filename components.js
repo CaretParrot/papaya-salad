@@ -1,7 +1,18 @@
+"use strict";
+
 class Database {
-    constructor() {
-        this.data = new Array(new Array());
-        this.headerRow = null;
+    #data = new Array(new Array());
+    /**
+     * @type {string[]}
+     */
+    #headerRow = [];
+
+    get data() {
+        return this.#data;
+    }
+
+    get headerRow() {
+        return this.#headerRow;
     }
 
     /**
@@ -9,7 +20,7 @@ class Database {
      * @returns {Promise<any[][]>}
      */
     async import(data, delimiter = ",", lineDelimiter = "\n") {
-        this.data = new Array(new Array());
+        this.#data = new Array(new Array());
         let temp = data.split(lineDelimiter);
 
         for (let i = 0; i < temp.length; i++) {
@@ -53,7 +64,7 @@ class Database {
      * @returns {Promise<any[][]>}
      */
     async importFile(file, delimiter = ",", lineDelimiter = "\n") {
-        this.data = new Array(new Array());
+        this.#data = new Array(new Array());
         let fr = new FileReader();
 
         fr.onload = () => {
@@ -73,8 +84,8 @@ class Database {
      * @returns {string[]}
      */
     setHeaderRow() {
-        this.headerRow = this.data[0];
-        this.data = this.data.splice(1);
+        this.#headerRow = this.data[0];
+        this.#data = this.data.splice(1);
         return this.headerRow;
     }
 }
