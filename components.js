@@ -1,11 +1,16 @@
 "use strict";
 
 class Database {
-    #data = new Array(new Array());
+    #data;
     /**
      * @type {string[]}
      */
-    #headerRow = [];
+    #headerRow;
+
+    constructor() {
+        this.#data = new Array(new Array());
+        this.#headerRow = [];
+    }
 
     get data() {
         return this.#data;
@@ -24,17 +29,17 @@ class Database {
         let temp = data.split(lineDelimiter);
 
         for (let i = 0; i < temp.length; i++) {
-            this.data[i] = temp[i].split(delimiter);
+            this.#data[i] = temp[i].split(delimiter);
         }
 
-        return this.data;
+        return this.#data;
     }
 
     /**
      * @returns {number}
      */
     get rowCount() {
-        return this.data.length;
+        return this.#data.length;
     }
 
     /**
@@ -43,9 +48,9 @@ class Database {
     get columnCount() {
         let maxCount = 0;
 
-        for (let i = 0; i < this.data.length; i++) {
-            if (this.data[i].length > maxCount) {
-                maxCount = this.data[i].length;
+        for (let i = 0; i < this.#data.length; i++) {
+            if (this.#data[i].length > maxCount) {
+                maxCount = this.#data[i].length;
             }
         }
 
@@ -77,15 +82,51 @@ class Database {
 
         fr.readAsText(file);
 
-        return this.data;
+        return this.#data;
     }
 
     /**
      * @returns {string[]}
      */
     setHeaderRow() {
-        this.#headerRow = this.data[0];
-        this.#data = this.data.splice(1);
+        this.#headerRow = this.#data[0];
+        this.#data = this.#data.splice(1);
         return this.#headerRow;
     }
 }
+
+class View {
+    #db;
+    #container;
+
+    /**
+     * @param {Database} db 
+     * @param {HTMLElement} container
+     */
+    constructor(db, container) {
+        this.#db = db;
+        this.#container = container;
+    }
+    
+    get database() {
+        return this.#db;
+    }
+    
+    set database(db) {
+        this.#db = db;
+    }
+
+    get container() {
+        return this.#container;
+    }
+}
+
+class CardView extends View {
+    /**
+     * @param {Database} db 
+     * @param {HTMLElement} container
+     */
+    constructor(db, container) {
+        super(db, container);
+    }
+} 
