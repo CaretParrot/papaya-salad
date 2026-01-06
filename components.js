@@ -86,6 +86,6 @@ class Database {
     setHeaderRow() {
         this.#headerRow = this.data[0];
         this.#data = this.data.splice(1);
-        return this.headerRow;
+        return this.#headerRow;
     }
 }

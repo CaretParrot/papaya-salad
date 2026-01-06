@@ -31,7 +31,7 @@ class MathPlus {
      * @param {number[]} array 
      * @returns {number}
      */
-    static meanArray(array) {
+    static #meanArray(array) {
         let total = 0;
         for (let i = 0; i < array.length; i++) {
             total += array[i];
@@ -47,7 +47,7 @@ class MathPlus {
      */
     static median(...array) {
         if (array.length % 2 === 0) {
-            return MathPlus.meanArray([array[array.length / 2 - 1], array[array.length / 2]]);
+            return MathPlus.#meanArray([array[array.length / 2 - 1], array[array.length / 2]]);
         } else {
             return Math.floor(array[(array.length - 1) / 2]);
         }
@@ -94,6 +94,27 @@ class MathPlus {
                 array.push(i);
             }
         }
+
+        return array;
+    }
+
+    /**
+     * 
+     * @param {number} number 
+     */
+    static primeFactorization(number) {
+        let array = [];
+
+        for (let i = 2; i < number; i++) {
+            if (number % i === 0) {
+                array.push(i);
+                number /= i;
+                i = 2;
+            }
+        }
+
+        array.push(number);
+        array.sort();
 
         return array;
     }
@@ -199,6 +220,11 @@ class MathPlus {
 }
 
 class MathFunction {
+    #expression;
+    #variable;
+    #rounding;
+    #d;
+
     /**
      * @param {string} expression 
      * @param {string} variable 
@@ -206,10 +232,10 @@ class MathFunction {
      * @param {number} d
      */
     constructor(expression, variable, rounding = 5, d = 10 ** -3) {
-        this.expression = expression;
-        this.variable = variable;
-        this.rounding = rounding;
-        this.d = d;
+        this.#expression = expression;
+        this.#variable = variable;
+        this.#rounding = rounding;
+        this.#d = d;
     }
 
     /**
@@ -217,7 +243,7 @@ class MathFunction {
      * @returns {number}
      */
     roundToPlaces(number) {
-        return Math.round(number * (10 ** this.rounding)) / (10 ** this.rounding);
+        return Math.round(number * (10 ** this.#rounding)) / (10 ** this.#rounding);
     }
 
     /**
@@ -235,7 +261,7 @@ class MathFunction {
      * @returns {number}
      */
     evaluate(inputVal) {
-        return this.roundToPlaces(Function(`return ${this.expression.replace(new RegExp(this.variable, "g"), inputVal.toString())};`)());
+        return this.roundToPlaces(Function(`return ${this.#expression.replace(new RegExp(this.#variable, "g"), inputVal.toString())};`)());
     }
 
     /**
@@ -244,7 +270,7 @@ class MathFunction {
      * @returns {number}
      */
     derivative(inputVal) {
-        return this.roundToPlaces((this.evaluate(inputVal + this.d) - this.evaluate(inputVal)) / this.d);
+        return this.roundToPlaces((this.evaluate(inputVal + this.#d) - this.evaluate(inputVal)) / this.#d);
     }
 
     /**
@@ -255,14 +281,14 @@ class MathFunction {
     async integral(lowerBound, upperBound) {
         let sum = 0;
         if (lowerBound < upperBound) {
-            for (let i = lowerBound; i <= upperBound - this.d; i += this.d) {
-                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.d)) * (this.d);
+            for (let i = lowerBound; i <= upperBound - this.#d; i += this.#d) {
+                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.#d)) * (this.d);
             }
 
             return this.roundToPlaces(sum);
         } else if (lowerBound > upperBound) {
-            for (let i = upperBound; i <= lowerBound - this.d; i += this.d) {
-                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.d)) * (this.d);
+            for (let i = upperBound; i <= lowerBound - this.#d; i += this.#d) {
+                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.#d)) * (this.#d);
             }
 
             return -this.roundToPlaces(sum);
@@ -287,7 +313,7 @@ class MathFunction {
             return 0;
         } else {
             for (let i = lowerBound; i <= upperBound; i++) {
-                sum += Function(`return ${this.expression.replace(new RegExp(this.variable, "g"), i.toString())};`)();
+                sum += Function(`return ${this.#expression.replace(new RegExp(this.#variable, "g"), i.toString())};`)();
             }
             return this.roundToPlaces(sum);
         }
@@ -309,7 +335,7 @@ class MathFunction {
             return 0;
         } else {
             for (let i = lowerBound; i <= upperBound; i++) {
-                product *= Function(`return ${this.expression.replace(new RegExp(this.variable, "g"), i.toString())};`)();
+                product *= Function(`return ${this.#expression.replace(new RegExp(this.#variable, "g"), i.toString())};`)();
             }
             return this.roundToPlaces(product);
         }
@@ -317,6 +343,8 @@ class MathFunction {
 }
 
 class Vector {
+    #coords;
+
     /**
      * @param {number[]} tail 
      * @param {number[]} tip
@@ -343,23 +371,31 @@ class Vector {
             }
         }
 
-        this.coords = [tail, tip];
+        this.#coords = [tail, tip];
         this.update();
+    }
+
+    get coords() {
+        return this.#coords;
+    }
+
+    set coords([tail, tip]) {
+        this.#coords = [tail, tip];
     }
 
     /**
      * @return {void}
      */
     update() {
-        if (this.coords[0].length < 3) {
-            for (let i = this.coords[0].length; i < 3; i++) {
-                this.coords[0][i] = 0;
+        if (this.#coords[0].length < 3) {
+            for (let i = this.#coords[0].length; i < 3; i++) {
+                this.#coords[0][i] = 0;
             }
         }
 
-        if (this.coords[1].length < 3) {
-            for (let i = this.coords[1].length; i < 3; i++) {
-                this.coords[1][i] = 0;
+        if (this.#coords[1].length < 3) {
+            for (let i = this.#coords[1].length; i < 3; i++) {
+                this.#coords[1][i] = 0;
             }
         }
     }
@@ -368,21 +404,21 @@ class Vector {
      * @returns {number}
      */
     get magnitude() {
-        return Math.pow((this.coords[1][0] - this.coords[0][0]) ** 2 + (this.coords[1][1] - this.coords[0][1]) ** 2 + (this.coords[1][2] - this.coords[0][2]) ** 2, 1 / 2);
+        return Math.pow((this.#coords[1][0] - this.#coords[0][0]) ** 2 + (this.#coords[1][1] - this.#coords[0][1]) ** 2 + (this.#coords[1][2] - this.#coords[0][2]) ** 2, 1 / 2);
     }
 
     /**
      * @returns {number}
      */
     get slope() {
-        return (this.coords[1][2] - this.coords[0][2]) / (Math.pow((this.coords[1][0] - this.coords[0][0]) ** 2 + (this.coords[1][1] - this.coords[0][1]) ** 2, 1 / 2));
+        return (this.#coords[1][2] - this.#coords[0][2]) / (Math.pow((this.#coords[1][0] - this.#coords[0][0]) ** 2 + (this.#coords[1][1] - this.#coords[0][1]) ** 2, 1 / 2));
     }
 
     /**
      * @returns {number}
      */
     get theta() {
-        return Math.atan((this.coords[1][1] - this.coords[0][1]) / (this.coords[1][0] - this.coords[0][0]));
+        return Math.atan((this.#coords[1][1] - this.#coords[0][1]) / (this.#coords[1][0] - this.#coords[0][0]));
     }
 
     /**
@@ -393,8 +429,8 @@ class Vector {
     }
 
     get isPositionVector() {
-        for (let i = 0; i < this.coords[0].length; i++) {
-            if (this.coords[0][i] !== 0) {
+        for (let i = 0; i < this.#coords[0].length; i++) {
+            if (this.#coords[0][i] !== 0) {
                 return false;
             }
         }
@@ -413,14 +449,14 @@ class Vector {
             tempVector.coords[1][i] /= magnitude;
         }
 
-        return new Vector(this.coords[0], [this.coords[0][0] + tempVector.coords[1][0], this.coords[0][1] + tempVector.coords[1][1], this.coords[0][2] + tempVector.coords[1][2]]);
+        return new Vector(this.#coords[0], [this.#coords[0][0] + tempVector.#coords[1][0], this.#coords[0][1] + tempVector.#coords[1][1], this.#coords[0][2] + tempVector.#coords[1][2]]);
     }
 
     /**
      * @returns {Vector}
      */
     getPositionVector() {
-        return new Vector([0, 0, 0], [this.coords[1][0] - this.coords[0][0], this.coords[1][1] - this.coords[0][1], this.coords[1][2] - this.coords[0][2]]);
+        return new Vector([0, 0, 0], [this.#coords[1][0] - this.#coords[0][0], this.#coords[1][1] - this.#coords[0][1], this.#coords[1][2] - this.#coords[0][2]]);
     }
 
     /**
@@ -460,37 +496,45 @@ class Vector {
     }
 }
 class Graph {
+    #element;
+    /**
+     * @type {Vector[]}
+     */
+    #vectors;
+    #width;
+    #height;
+    #color;
+    #lineWidth;
+    #ctx;
     /**
      * @param {Element} parentElement 
      */
     constructor(parentElement, width = 300, height = 300, color = "white", lineWidth = 5) {
-        this.element = document.createElement("canvas");
-        /**
-         * @type {Vector[]}
-         */
-        this.vectorList = [];
-        this.width = width;
-        this.height = height;
-        this.color = color;
-        this.lineWidth = lineWidth;
+        this.#element = document.createElement("canvas");
 
-        this.element.style.transform = "scaleY(-1)";
-        this.element.style.padding = "0";
-        this.ctx = this.element.getContext("2d");
+        this.#vectors = [];
+        this.#width = width;
+        this.#height = height;
+        this.#color = color;
+        this.#lineWidth = lineWidth;
 
-        if (this.ctx === null) {
+        this.#element.style.transform = "scaleY(-1)";
+        this.#element.style.padding = "0";
+        this.#ctx = /** @type {CanvasRenderingContext2D} */ (this.#element.getContext("2d"));
+
+        if (this.#ctx === null) {
             throw "INIT_ERROR: Could not create paint context."
         }
 
-        this.ctx.lineWidth = this.lineWidth;
-        parentElement.appendChild(this.element);
+        this.#ctx.lineWidth = this.#lineWidth;
+        parentElement.appendChild(this.#element);
     }
 
     /**
      * @returns {number}
      */
     get width() {
-        return this.element.width;
+        return this.#element.width;
     }
 
     /**
@@ -498,14 +542,14 @@ class Graph {
      * @returns {void}
      */
     set width(width) {
-        this.element.width = width;
+        this.#element.width = width;
     }
 
     /**
      * @returns {number}
      */
     get height() {
-        return this.element.height;
+        return this.#element.height;
     }
 
     /**
@@ -513,14 +557,14 @@ class Graph {
      * @returns {void}
      */
     set height(height) {
-        this.element.height = height;
+        this.#element.height = height;
     }
 
     /**
      * @returns {Vector[]}
      */
     get vectors() {
-        return this.vectorList;
+        return this.#vectors;
     }
 
     /**
@@ -528,18 +572,18 @@ class Graph {
      * @return {void}
      */
     set vectors(vectors) {
-        this.vectorList = vectors;
-        for (let i = 0; i < this.vectorList.length; i++) {
-            this.ctx.strokeStyle = this.color;
-            this.ctx.lineWidth = this.lineWidth;
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.vectorList[i].coords[0][0], this.vectorList[i].coords[0][1]);
-            this.ctx.lineTo(this.vectorList[i].coords[1][0], this.vectorList[i].coords[1][1]);
-            this.ctx.stroke();
+        this.#vectors = vectors;
+        for (let i = 0; i < this.#vectors.length; i++) {
+            this.#ctx.strokeStyle = this.#color;
+            this.#ctx.lineWidth = this.#lineWidth;
+            this.#ctx.beginPath();
+            this.#ctx.moveTo(this.#vectors[i].coords[0][0], this.#vectors[i].coords[0][1]);
+            this.#ctx.lineTo(this.#vectors[i].coords[1][0], this.#vectors[i].coords[1][1]);
+            this.#ctx.stroke();
         }
     }
 
     clear() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.#ctx.clearRect(0, 0, this.width, this.height);
     }
 }
