@@ -32,7 +32,7 @@ class Database {
             this.#data[i] = temp[i].split(delimiter);
         }
 
-        return this.#data;
+        return this.data;
     }
 
     /**
@@ -82,7 +82,7 @@ class Database {
 
         fr.readAsText(file);
 
-        return this.#data;
+        return this.data;
     }
 
     /**
@@ -92,6 +92,47 @@ class Database {
         this.#headerRow = this.#data[0];
         this.#data = this.#data.splice(1);
         return this.#headerRow;
+    }
+    
+
+    /**
+     * @param {number} col 
+     * @returns 
+     */
+    getCol(col) {
+        let array = [];
+
+        for (let i = 0; i < this.data.length; i++) {
+            array.push(this.data[i][col]);
+        }
+
+        return array;
+    }
+
+    /**
+     * @param {number} col 
+     * @param {any[]} array 
+     */
+    setCol(col, array) {
+        for (let i = 0; i < this.data.length; i++) {
+            this.data[i][col] = array[i];
+        }
+    }
+
+    /**
+     * @param {number} row 
+     * @returns 
+     */
+    getRow(row) {
+        return this.#data[row];
+    }
+
+    /**
+     * @param {number} row 
+     * @param {any[]} array 
+     */
+    setRow(row, array) {
+        this.#data[row] = array;
     }
 }
 
@@ -107,12 +148,12 @@ class View {
         this.#db = db;
         this.#container = container;
     }
-    
-    get database() {
+
+    get db() {
         return this.#db;
     }
-    
-    set database(db) {
+
+    set db(db) {
         this.#db = db;
     }
 
@@ -121,12 +162,55 @@ class View {
     }
 }
 
-class CardView extends View {
+class TableView extends View {
+    #db;
+    #container;
+    #element;
+    /**
+     * @type {string[]}
+     */
+    #formatting;
+
     /**
      * @param {Database} db 
      * @param {HTMLElement} container
+     * @param {any[]} formatting
      */
-    constructor(db, container) {
+    constructor(db, container, formatting) {
         super(db, container);
+        this.#db = db;
+        this.#container = container;
+        if (formatting !== undefined) {
+            this.#formatting = formatting;
+        } else {
+            this.#formatting = [];
+            for (let i = 0; i < this.#db.getRow(0).length; i++) {
+                this.#formatting[i] = "label";
+            }
+        }
+        this.#element = document.createElement("div");
+        this.#element.style.setProperty("display", "grid");
+        this.#element.style.setProperty("grid", `auto / repeat(${this.#db.getRow(0).length.toString()}, 1fr)`);
+        this.#container.appendChild(this.#element);
+        this.update();
+    }
+
+    async update() {
+        this.#element.innerHTML = "";
+        for (let i = 0; i < this.#db.data.length; i++) {
+            for (let j = 0; j < this.#db.data[i].length; j++) {
+                let cell = document.createElement(this.#formatting[j]);
+                cell.innerHTML = this.#db.data[i][j];
+                this.#element.appendChild(cell);
+            }
+        }
+    }
+
+    get formatting() {
+        return this.#formatting;
+    }
+
+    set formatting(formatting) {
+        this.#formatting = formatting;
     }
 } 

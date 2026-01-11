@@ -7,6 +7,7 @@
         <title>Document</title>
         <link rel='icon' href='https://caretparrot.github.io/papaya-salad/Profile%20Picture.png'>
         <link rel='stylesheet' href="https://caretparrot.github.io/papaya-palettes/default.css">
+        <script src="https://caretparrot.github.io/papaya-palettes/script.js"></script>
         <script src="./script.js"></script>
         <script src="./components.js"></script>
         <script src="./math-plus.js"></script>
@@ -26,7 +27,7 @@
                 Javascript a little easier!</p>
             <button id="nextPage" onclick="pg.changePage('empty')">Next Page</button>
             <input type="file" onchange="getFile()" id="fileInput">
-            <input type="range" min="0" value="280" max="360" id="slider">
+            <button onclick="displayData()">Display Data</button>
         </div>
         <div id="empty" class="page">
             <p>Hahaha this is not empty...</p>
@@ -37,15 +38,17 @@
             let slideshow = new SlideShow(document.getElementById("slideshow"));
             slideshow.clickable();
 
+            let p = new SimplePallete();
             let pg = new PageGroup("page", "grid");
             let db = new Database();
+            let tv;
 
             function getFile() {
                 db.importFile(document.getElementById("fileInput").files[0]);
             }
 
-            document.getElementById("slider").oninput = () => {
-                ColorPalletes.paint(+document.getElementById("slider").value)
+            function displayData() {
+                tv = new TableView(db, document.body);
             }
 
             let graph = new Graph(document.body);
