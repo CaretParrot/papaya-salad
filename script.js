@@ -249,3 +249,62 @@ class Binder {
         });
     }
 }
+
+class DeckOfCards {
+    #cards;
+    #values;
+    #suits;
+    /**
+     * @type {object}
+     */
+    #stats;
+
+    constructor(sorted = true) {
+        this.#cards = [];
+        this.#values = [
+            "Ace", "Two", "Three", "Four",
+            "Five", "Six", "Seven", "Eight",
+            "Nine", "Ten", "Jack", "Queen", "King"
+        ];
+        this.#suits = ["Spades", "Diamonds", "Clubs", "Hearts"];
+        this.#stats = {count: 52};
+
+        for (let i = 0; i < this.#suits.length; i++) {
+            for (let j = 0; j < this.#values.length; j++) {
+                this.#cards.push(`${this.#values[j]} of ${this.#suits[i]}`);
+            }
+        }
+        
+        if (!sorted) {
+            this.shuffle();
+        }
+    }
+
+    shuffle() {
+        for (let i = this.#cards.length - 1; i > 0; i--) {
+            let randomIndex = RandomPlus.randomInteger(0, i + 1);
+            let temp = this.#cards[i];
+            this.#cards[i] = this.#cards[randomIndex];
+            this.#cards[randomIndex] = temp;
+        }
+
+        return this.#cards;
+    }
+
+    get cards() {
+        return this.#cards;
+    }
+
+    get top() {
+        return this.#cards[0];
+    }
+
+    get bottom() {
+        return this.#cards.at(-1);
+    }
+
+    get stats() {
+        this.#stats.count = this.#cards.length;
+        return this.#stats;
+    }
+}
