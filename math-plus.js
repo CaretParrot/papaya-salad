@@ -495,6 +495,7 @@ class Vector {
         return new Vector([0, 0, 0], [(posVector1.coords[1][1] * posVector2.coords[1][2]) - (posVector1.coords[1][2] * posVector2.coords[1][1]), (posVector1.coords[1][2] * posVector2.coords[1][0]) - (posVector1.coords[1][0] * posVector2.coords[1][2]), (posVector1.coords[1][0] * posVector2.coords[1][1]) - (posVector1.coords[1][1] * posVector2.coords[1][0])]);
     }
 }
+
 class Graph {
     #element;
     /**
@@ -585,5 +586,141 @@ class Graph {
 
     clear() {
         this.#ctx.clearRect(0, 0, this.width, this.height);
+    }
+}
+
+class Matrix {
+    /**
+     * @type {Array<Array<number>>}
+     */
+    #values;
+
+    constructor(m = 2, n = 2) {
+        this.#values = new Array(new Array());
+
+        for (let i = 0; i < m; i++) {
+            this.#values[i] = [];
+            for (let j = 0; j < n; j++) {
+                if (i == j) {
+                    this.#values[i].push(1);
+                } else {
+                    this.#values[i].push(0);
+                }
+            }
+        }
+    }
+
+    get m() {
+        return this.#values.length;
+    }
+
+    get n() {
+        return this.#values[0].length;
+    }
+
+    get matrix() {
+        return this.#values;
+    }
+
+    set matrix(values) {
+        if (values.length !== this.m || values[0].length !== this.n) { 
+            throw `INVALID_INPUT: Matrix input must be ${this.m}×${this.n}.`;
+        }
+
+        this.#values = values;
+    }
+
+    /**
+     * @param {number} index 
+     * @returns {Array<number>}
+     */
+    getRow(index) {
+        if (index > this.m || index < 1) {
+            throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
+        }
+
+        return this.#values[index - 1];
+    }
+
+    /**
+     * @param {number} index 
+     * @returns {Array<number>}
+     */
+    getColumn(index) {
+        if (index > this.n || index < 1) {
+            throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
+        }
+
+        let columnOutput = [];
+        for (let i = 0; i < this.m; i++) {
+            columnOutput.push(this.#values[i][index - 1]);
+        }
+
+        return columnOutput;
+    }
+
+    /**
+     * @param {number} index 
+     * @param {number} scale 
+     */
+    scaleRow(index, scale) {
+        if (index > this.m || index < 1) {
+            throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
+        }
+
+        for (let i = 0; i < this.n; i++) {
+            this.#values[index - 1][i] *= scale;
+        }
+
+        return this.#values[index - 1];
+    }
+
+    /**
+     * @param {number} index1 
+     * @param {number} index2 
+     */
+    swapRows(index1, index2) { 
+        if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
+            throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
+        }
+
+        let temp = this.#values[index1 - 1];
+        this.#values[index1 - 1] = this.#values[index2 - 1];
+        this.#values[index2 - 1] = temp;
+        return this;
+    }
+
+    /**
+     * @param {number} index1 
+     * @param {number} scale 
+     * @param {number} index2 
+     */
+    addMultipleOfRow(index1, scale, index2) { 
+        if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
+            throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
+        }
+
+        let temp = this.#values[index1 - 1].slice();
+
+        for (let i = 0; i < this.n; i++) {
+            temp[i] *= scale;
+            this.#values[index2 - 1][i] += temp[i];
+        }
+
+        return this;
+    }
+
+    /**
+     * @param {number} row 
+     * @param {number} column 
+     * @param {number} value 
+     */
+    setValue(row, column, value) {
+        if (row > this.m || row < 1 || column > this.n || column < 1) {
+            throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
+        }
+
+        this.#values[row - 1][column - 1] = value;
+        return this;
     }
 }
