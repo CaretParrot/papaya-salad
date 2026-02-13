@@ -304,6 +304,7 @@ class DeckOfCards {
     }
 
     get stats() {
+        // @ts-ignore
         this.#stats.count = this.#cards.length;
         return this.#stats;
     }
