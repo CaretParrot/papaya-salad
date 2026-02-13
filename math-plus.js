@@ -282,7 +282,7 @@ class MathFunction {
         let sum = 0;
         if (lowerBound < upperBound) {
             for (let i = lowerBound; i <= upperBound - this.#d; i += this.#d) {
-                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.#d)) * (this.d);
+                sum += (1 / 2) * (this.evaluate(i) + this.evaluate(i + this.#d)) * (this.#d);
             }
 
             return this.roundToPlaces(sum);
