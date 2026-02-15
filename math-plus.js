@@ -591,7 +591,7 @@ class Graph {
 
 class Matrix {
     /**
-     * @type {Array<Array<number>>}
+     * @type {number[][]}
      */
     #values;
 
@@ -632,7 +632,7 @@ class Matrix {
 
     /**
      * @param {number} index 
-     * @returns {Array<number>}
+     * @returns {number[]}
      */
     getRow(index) {
         if (index > this.m || index < 1) {
@@ -644,7 +644,7 @@ class Matrix {
 
     /**
      * @param {number} index 
-     * @returns {Array<number>}
+     * @returns {number[]}
      */
     getColumn(index) {
         if (index > this.n || index < 1) {
@@ -721,6 +721,20 @@ class Matrix {
         }
 
         this.#values[row - 1][column - 1] = value;
+        return this;
+    }
+
+    /**
+     * @returns {Matrix}
+     */
+    echelonForm() {
+        for (let i = 1; i <= this.n; i++) {
+            this.scaleRow(i, 1 / this.#values[i - 1][i - 1]);
+            for (let j = i + 1; j <= this.m; j++) {
+                this.addMultipleOfRow(i, -this.#values[j - 1][i - 1], j);
+            }
+        }
+
         return this;
     }
 }
