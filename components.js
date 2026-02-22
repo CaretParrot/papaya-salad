@@ -93,7 +93,7 @@ class Database {
         this.#data = this.#data.splice(1);
         return this.#headerRow;
     }
-    
+
 
     /**
      * @param {number} col 

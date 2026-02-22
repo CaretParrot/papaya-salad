@@ -7,15 +7,14 @@
         <title>Document</title>
         <link rel='icon' href='https://caretparrot.github.io/papaya-salad/Profile%20Picture.png'>
         <link rel='stylesheet' href="https://caretparrot.github.io/papaya-palettes/default.css">
-        <script src="https://caretparrot.github.io/papaya-palettes/script.js"></script>
-        <script src="./script.js"></script>
         <script src="./components.js"></script>
         <script src="./math-plus.js"></script>
+        <script src="./script.js"></script>
     </head>
 
     <body>
         <div id="homePage" class="page">
-            <div id="slideshow">
+            <div id="slideshow" style="padding: 0; border: none;">
                 <h1>Hello!</h1>
                 <h1>Welcome to papaya-salad.js!</h1>
                 <h1>I'm glad you are here!</h1>
@@ -34,7 +33,7 @@
             <button id="previousPage" onclick="pg.changePage('homePage')">Previous Page</button>
         </div>
 
-        <script>
+        <script defer>
             let slideshow = new SlideShow(document.getElementById("slideshow"));
             slideshow.clickable();
 
@@ -56,6 +55,10 @@
             graph.height = 300;
             graph.lineWidth = 3;
             graph.vectors = [new Vector([0, 0], [100, 50]), new Vector([0, 0], [70, 80])];
+
+            let A = new Matrix(4, 4);
+            A.matrix = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]];
+            console.log(A.echelonForm());
         </script>
     </body>
 

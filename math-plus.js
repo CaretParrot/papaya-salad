@@ -623,7 +623,7 @@ class Matrix {
     }
 
     set matrix(values) {
-        if (values.length !== this.m || values[0].length !== this.n) { 
+        if (values.length !== this.m || values[0].length !== this.n) {
             throw `INVALID_INPUT: Matrix input must be ${this.m}×${this.n}.`;
         }
 
@@ -662,6 +662,7 @@ class Matrix {
     /**
      * @param {number} index 
      * @param {number} scale 
+     * @returns {number[]}
      */
     scaleRow(index, scale) {
         if (index > this.m || index < 1) {
@@ -677,9 +678,10 @@ class Matrix {
 
     /**
      * @param {number} index1 
-     * @param {number} index2 
+     * @param {number} index2
+     * @returns {Matrix}
      */
-    swapRows(index1, index2) { 
+    swapRows(index1, index2) {
         if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
             throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
         }
@@ -694,8 +696,9 @@ class Matrix {
      * @param {number} index1 
      * @param {number} scale 
      * @param {number} index2 
+     * @returns {Matrix}
      */
-    addMultipleOfRow(index1, scale, index2) { 
+    addMultipleOfRow(index1, scale, index2) {
         if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
             throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
         }
@@ -704,7 +707,9 @@ class Matrix {
 
         for (let i = 0; i < this.n; i++) {
             temp[i] *= scale;
+            console.log(`Addition: ${temp[i]}`);
             this.#values[index2 - 1][i] += temp[i];
+            console.log(`Result: ${this.#values[index2 - 1][i]}`);
         }
 
         return this;
@@ -714,6 +719,7 @@ class Matrix {
      * @param {number} row 
      * @param {number} column 
      * @param {number} value 
+     * @returns {Matrix}
      */
     setValue(row, column, value) {
         if (row > this.m || row < 1 || column > this.n || column < 1) {
@@ -728,10 +734,12 @@ class Matrix {
      * @returns {Matrix}
      */
     echelonForm() {
-        for (let i = 1; i <= this.n; i++) {
-            this.scaleRow(i, 1 / this.#values[i - 1][i - 1]);
-            for (let j = i + 1; j <= this.m; j++) {
-                this.addMultipleOfRow(i, -this.#values[j - 1][i - 1], j);
+        for (let j = 1; j <= this.m; j++) {
+            this.scaleRow(j, 1 / this.#values[j - 1][j - 1]);
+
+            for (let i = j + 1; i <= this.n; i++) {
+                console.log(`Inputs: ${j}, ${-this.#values[i - 1][j - 1]}, ${i}`);
+                this.addMultipleOfRow(j, -this.#values[i - 1][j - 1], i);
             }
         }
 

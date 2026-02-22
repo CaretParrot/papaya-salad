@@ -4,15 +4,24 @@ class PageGroup {
     #pageClass;
     #displayType;
     #currentPageId;
+    #savePage;
 
     /**
      * @param {string} pageClass 
      * @param {string} displayType 
+     * @param {string} initialPageId
+     * @param {boolean} savePage
      */
-    constructor(pageClass, displayType = "block", initialPageId = document.getElementsByClassName(pageClass)[0].id) {
+    constructor(pageClass, displayType = "block", initialPageId = document.getElementsByClassName(pageClass)[0].id, savePage = true) {
         this.#pageClass = pageClass;
         this.#displayType = displayType;
         this.#currentPageId = initialPageId;
+        this.#savePage = savePage;
+        if (savePage) { 
+            this.#currentPageId = localStorage.getItem(`${this.#pageClass}.savedPage`) || initialPageId;
+            console.log(this.#currentPageId);
+        }
+        
         this.changePage(this.#currentPageId);
     }
 
@@ -23,7 +32,7 @@ class PageGroup {
     changePage(pageId) {
         let selectedElement = document.getElementById(pageId);
         if (selectedElement == null) {
-            return false;
+            throw "Could not find page.";
         }
 
         let allPages = /** @type {HTMLCollectionOf<HTMLElement>} */ (document.getElementsByClassName(this.#pageClass));
@@ -34,7 +43,10 @@ class PageGroup {
 
         selectedElement.style.display = this.#displayType;
         selectedElement.classList.add("open");
-        this.currentPageId = pageId;
+        this.#currentPageId = pageId;
+        if (this.#savePage) { 
+            localStorage.setItem(`${this.#pageClass}.savedPage`, this.#currentPageId);
+        }
         return true;
     }
 }
