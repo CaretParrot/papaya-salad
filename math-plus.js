@@ -631,6 +631,16 @@ class Matrix {
     }
 
     /**
+     * 
+     * @param {number} row 
+     * @param {number} column 
+     * @returns {number}
+     */
+    getValue(row, column) {
+        return this.#values[row - 1][column - 1];
+    }
+
+    /**
      * @param {number} index 
      * @returns {number[]}
      */
@@ -660,20 +670,20 @@ class Matrix {
     }
 
     /**
-     * @param {number} index 
+     * @param {number} row 
      * @param {number} scale 
-     * @returns {number[]}
+     * @returns {Matrix}
      */
-    scaleRow(index, scale) {
-        if (index > this.m || index < 1) {
+    scaleRow(row, scale) {
+        if (row > this.m || row < 1) {
             throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
         }
 
-        for (let i = 0; i < this.n; i++) {
-            this.#values[index - 1][i] *= scale;
+        for (let i = 1; i <= this.n; i++) {
+            this.setValue(row, i, this.getValue(row, i) * scale);
         }
 
-        return this.#values[index - 1];
+        return this;
     }
 
     /**
@@ -703,13 +713,12 @@ class Matrix {
             throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
         }
 
-        let temp = this.#values[index1 - 1].slice();
+        let temp = this.getRow(index1).slice();
+        console.log(temp);
 
         for (let i = 0; i < this.n; i++) {
             temp[i] *= scale;
-            console.log(`Addition: ${temp[i]}`);
             this.#values[index2 - 1][i] += temp[i];
-            console.log(`Result: ${this.#values[index2 - 1][i]}`);
         }
 
         return this;
@@ -734,12 +743,11 @@ class Matrix {
      * @returns {Matrix}
      */
     echelonForm() {
-        for (let j = 1; j <= this.m; j++) {
-            this.scaleRow(j, 1 / this.#values[j - 1][j - 1]);
+        for (let i = 1; i <= this.m; i++) {
+            this.scaleRow(i, 1 / this.getValue(i, i));
 
-            for (let i = j + 1; i <= this.n; i++) {
-                console.log(`Inputs: ${j}, ${-this.#values[i - 1][j - 1]}, ${i}`);
-                this.addMultipleOfRow(j, -this.#values[i - 1][j - 1], i);
+            for (let j = i + 1; j <= this.m; j++) {
+                this.addMultipleOfRow(i, -this.getValue(j, i), j).matrix;
             }
         }
 
