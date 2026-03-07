@@ -36,29 +36,13 @@
         <script defer>
             let slideshow = new SlideShow(document.getElementById("slideshow"));
             slideshow.clickable();
-
-            /* let p = new SimplePallete(); */
+            
             let pg = new PageGroup("page", "grid");
-            let db = new Database();
-            let tv;
-
-            function getFile() {
-                db.importFile(document.getElementById("fileInput").files[0]);
-            }
-
-            function displayData() {
-                tv = new TableView(db, document.body);
-            }
-
-            let graph = new Graph(document.body);
-            graph.width = 300;
-            graph.height = 300;
-            graph.lineWidth = 3;
-            graph.vectors = [new Vector([0, 0], [100, 50]), new Vector([0, 0], [70, 80])];
 
             let A = new Matrix(4, 4);
             A.matrix = [[2, 4, 6, 8], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]];
-            console.log(A.echelonForm());
+            A.echelonForm();
+            console.log(A);
         </script>
     </body>
 

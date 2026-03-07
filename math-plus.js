@@ -696,7 +696,7 @@ class Matrix {
             throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
         }
 
-        let temp = this.#values[index1 - 1];
+        let temp = JSON.parse(JSON.stringify(this.#values[index1 - 1]));
         this.#values[index1 - 1] = this.#values[index2 - 1];
         this.#values[index2 - 1] = temp;
         return this;
@@ -713,8 +713,7 @@ class Matrix {
             throw "INVALID_INDEX: Index is too large or small. Please note that matrices do not use zero-indexing.";
         }
 
-        let temp = this.getRow(index1).slice();
-        console.log(temp);
+        let temp = JSON.parse(JSON.stringify(this.getRow(index1)));
 
         for (let i = 0; i < this.n; i++) {
             temp[i] *= scale;
@@ -744,10 +743,12 @@ class Matrix {
      */
     echelonForm() {
         for (let i = 1; i <= this.m; i++) {
-            this.scaleRow(i, 1 / this.getValue(i, i));
+            if (1 / this.getValue(i, i) !== 0) {
+                this.scaleRow(i, 1 / this.getValue(i, i));
+            }
 
             for (let j = i + 1; j <= this.m; j++) {
-                this.addMultipleOfRow(i, -this.getValue(j, i), j).matrix;
+                this.addMultipleOfRow(i, -this.getValue(j, i), j);
             }
         }
 

@@ -1,6 +1,6 @@
 "use strict";
 
-class Database {
+class Database extends HTMLDivElement {
     #data;
     /**
      * @type {string[]}
@@ -8,6 +8,7 @@ class Database {
     #headerRow;
 
     constructor() {
+        super();
         this.#data = new Array(new Array());
         this.#headerRow = [];
     }
@@ -136,7 +137,7 @@ class Database {
     }
 }
 
-class View {
+class View extends HTMLDivElement {
     #db;
     #container;
 
@@ -145,6 +146,7 @@ class View {
      * @param {HTMLElement} container
      */
     constructor(db, container) {
+        super();
         this.#db = db;
         this.#container = container;
     }
@@ -214,3 +216,7 @@ class TableView extends View {
         this.#formatting = formatting;
     }
 } 
+
+customElements.define("database", Database);
+customElements.define("view", View);
+customElements.define("table-view", TableView);
