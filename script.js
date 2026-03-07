@@ -19,7 +19,6 @@ class PageGroup {
         this.#savePage = savePage;
         if (savePage) { 
             this.#currentPageId = localStorage.getItem(`${this.#pageClass}.savedPage`) || initialPageId;
-            console.log(this.#currentPageId);
         }
         
         this.changePage(this.#currentPageId);

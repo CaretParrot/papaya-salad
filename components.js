@@ -1,6 +1,6 @@
 "use strict";
 
-class Database extends HTMLDivElement {
+class Database {
     #data;
     /**
      * @type {string[]}
@@ -8,7 +8,6 @@ class Database extends HTMLDivElement {
     #headerRow;
 
     constructor() {
-        super();
         this.#data = new Array(new Array());
         this.#headerRow = [];
     }
@@ -137,86 +136,77 @@ class Database extends HTMLDivElement {
     }
 }
 
-class View extends HTMLDivElement {
-    #db;
-    #container;
-
+class TableView extends HTMLElement {
     /**
-     * @param {Database} db 
-     * @param {HTMLElement} container
+     * @type {Database}
      */
-    constructor(db, container) {
-        super();
-        this.#db = db;
-        this.#container = container;
-    }
-
-    get db() {
-        return this.#db;
-    }
-
-    set db(db) {
-        this.#db = db;
-    }
-
-    get container() {
-        return this.#container;
-    }
-}
-
-class TableView extends View {
     #db;
-    #container;
-    #element;
     /**
      * @type {string[]}
      */
-    #formatting;
+    #types;
+    static observedAttributes = ["db"];
+
+    constructor() {
+        super();
+        this.#db = new Database();
+        this.#types = [];
+    }
 
     /**
      * @param {Database} db 
-     * @param {HTMLElement} container
-     * @param {any[]} formatting
+     * @param {string[]} types 
      */
-    constructor(db, container, formatting) {
-        super(db, container);
+    load(db, types) {
         this.#db = db;
-        this.#container = container;
-        if (formatting !== undefined) {
-            this.#formatting = formatting;
+        this.#types = types;
+        if (types !== undefined) {
+            this.#types = types;
         } else {
-            this.#formatting = [];
+            this.#types = [];
             for (let i = 0; i < this.#db.getRow(0).length; i++) {
-                this.#formatting[i] = "label";
+                this.#types.push("label");
             }
         }
-        this.#element = document.createElement("div");
-        this.#element.style.setProperty("display", "grid");
-        this.#element.style.setProperty("grid", `auto / repeat(${this.#db.getRow(0).length.toString()}, 1fr)`);
-        this.#container.appendChild(this.#element);
         this.update();
     }
 
     async update() {
-        this.#element.innerHTML = "";
+        this.innerHTML = "";
         for (let i = 0; i < this.#db.data.length; i++) {
             for (let j = 0; j < this.#db.data[i].length; j++) {
-                let cell = document.createElement(this.#formatting[j]);
+                let cell = document.createElement(this.#types[j]);
                 cell.innerHTML = this.#db.data[i][j];
-                this.#element.appendChild(cell);
+                this.appendChild(cell);
             }
         }
     }
 
     get formatting() {
-        return this.#formatting;
+        return this.#types;
     }
 
     set formatting(formatting) {
-        this.#formatting = formatting;
+        this.#types = formatting;
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {Database} oldValue 
+     * @param {Database} newValue 
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+        console.log(newValue);
+
+        switch (name) {
+            case "db":
+                this.load(newValue, []);
+                break;
+            default:
+                break;
+        }
     }
 } 
 
-customElements.define("database", Database);
-customElements.define("view", View);
 customElements.define("table-view", TableView);
