@@ -672,7 +672,7 @@ class Matrix {
     /**
      * @param {number} row 
      * @param {number} scale 
-     * @returns {Matrix}
+     * @returns {number[]}
      */
     scaleRow(row, scale) {
         if (row > this.m || row < 1) {
@@ -683,13 +683,12 @@ class Matrix {
             this.setValue(row, i, this.getValue(row, i) * scale);
         }
 
-        return this;
+        return this.getRow(row);
     }
 
     /**
      * @param {number} index1 
      * @param {number} index2
-     * @returns {Matrix}
      */
     swapRows(index1, index2) {
         if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
@@ -699,14 +698,13 @@ class Matrix {
         let temp = JSON.parse(JSON.stringify(this.#values[index1 - 1]));
         this.#values[index1 - 1] = this.#values[index2 - 1];
         this.#values[index2 - 1] = temp;
-        return this;
     }
 
     /**
      * @param {number} index1 
      * @param {number} scale 
      * @param {number} index2 
-     * @returns {Matrix}
+     * @return {number[]}
      */
     addMultipleOfRow(index1, scale, index2) {
         if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
@@ -717,17 +715,17 @@ class Matrix {
 
         for (let i = 0; i < this.n; i++) {
             temp[i] *= scale;
-            this.#values[index2 - 1][i] += temp[i];
+            this.setValue(index2, i + 1, this.getValue(index2, i + 1) + temp[i]);
+
         }
 
-        return this;
+        return this.getRow(index2);
     }
 
     /**
      * @param {number} row 
      * @param {number} column 
      * @param {number} value 
-     * @returns {Matrix}
      */
     setValue(row, column, value) {
         if (row > this.m || row < 1 || column > this.n || column < 1) {
@@ -735,23 +733,46 @@ class Matrix {
         }
 
         this.#values[row - 1][column - 1] = value;
-        return this;
     }
 
     /**
-     * @returns {Matrix}
+     * @returns {Promise<Matrix>}
      */
-    echelonForm() {
-        for (let i = 1; i <= this.m; i++) {
-            if (1 / this.getValue(i, i) !== 0) {
+    async echelonForm() {
+        this.optimizeRowOrder();
+
+        let i = 1;
+
+        for (i = 1; i <= this.m; i++) { 
+            if (this.getValue(i, i) !== 0) {
                 this.scaleRow(i, 1 / this.getValue(i, i));
             }
 
-            for (let j = i + 1; j <= this.m; j++) {
+            for (let j = i + 1; j <= this.m; j++) { 
                 this.addMultipleOfRow(i, -this.getValue(j, i), j);
             }
         }
 
+        for (i -= 1; i > 1; i--) {
+            for (let j = i - 1; j >= 1; j--) {
+                this.addMultipleOfRow(i, -this.getValue(j, i), j);
+            }
+        } 
+
         return this;
+    }
+
+    optimizeRowOrder() {
+        let maximum = this.getValue(1, 1);
+        let maxIndex = 0;
+
+        for (let i = 1; i <= this.m; i++) {
+            if (this.getValue(i, 1) > maximum) {
+                maximum = this.getValue(i, 1);
+                maxIndex = i;
+            }
+        }
+
+        this.swapRows(1, maxIndex);
     }
 }

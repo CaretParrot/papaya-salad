@@ -48,6 +48,18 @@
             let tv = document.getElementById("tv");
 
             tv.db = db;
+            
+            let A = new Matrix(4, 5);
+
+            A.matrix = [
+                [0, 1, 2, 3, 4],
+                [1, 2, 3, 4, 5],
+                [2, 3, 4, 5, 6],
+                [3, 4, 5, 6, 7]
+            ];
+
+            A.echelonForm();
+            console.log(A); 
         </script>
     </body>
 
