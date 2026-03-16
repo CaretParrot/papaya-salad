@@ -94,7 +94,6 @@ class Database {
         return this.#headerRow;
     }
 
-
     /**
      * @param {number} col 
      * @returns 
@@ -207,6 +206,6 @@ class TableView extends HTMLElement {
                 break;
         }
     }
-} 
+}
 
 customElements.define("table-view", TableView);

@@ -601,7 +601,7 @@ class Matrix {
         for (let i = 0; i < m; i++) {
             this.#values[i] = [];
             for (let j = 0; j < n; j++) {
-                if (i == j) {
+                if (i === j) {
                     this.#values[i].push(1);
                 } else {
                     this.#values[i].push(0);
@@ -757,7 +757,9 @@ class Matrix {
             for (let j = i - 1; j >= 1; j--) {
                 this.addMultipleOfRow(i, -this.getValue(j, i), j);
             }
-        } 
+        }
+
+        this.moveZeroVectors();
 
         return this;
     }
@@ -774,5 +776,33 @@ class Matrix {
         }
 
         this.swapRows(1, maxIndex);
+    }
+
+    /**
+     * @param {number} row 
+     */
+    isZeroVector(row) {
+        for (let i = 1; i <= this.n; i++) {
+            if (this.getValue(row, i) !== 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    moveZeroVectors() { 
+        for (let i = 1; i <= this.m; i++) {
+            if (this.isZeroVector(i)) {
+                this.matrix.splice(i - 1, 1);
+                let newVector = [];
+
+                for (let i = 0; i < this.n; i++) {
+                    newVector.push(0);
+                }
+
+                this.matrix.push(newVector);
+            }
+        }
     }
 }
