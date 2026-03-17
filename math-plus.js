@@ -742,8 +742,9 @@ class Matrix {
         this.optimizeRowOrder();
 
         let i = 1;
+        let minDim = Math.min(this.m, this.n);
 
-        for (i = 1; i <= this.m; i++) { 
+        for (i = 1; i <= minDim; i++) { 
             if (this.getValue(i, i) !== 0) {
                 this.scaleRow(i, 1 / this.getValue(i, i));
             }

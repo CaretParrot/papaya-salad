@@ -208,4 +208,32 @@ class TableView extends HTMLElement {
     }
 }
 
+class NavBar extends HTMLElement {
+    static observedAttributes = ["links"];
+    constructor() {
+        super();
+    }
+
+    /**
+     * @param {string} name 
+     * @param {string} oldValue 
+     * @param {string} newValue 
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+        let linkList = [];
+        if (name === "links") {
+            linkList = JSON.parse(newValue);
+            for (let i = 0; i < linkList.length; i++) {
+                let newLink = document.createElement("a");
+                newLink.href = `./${linkList[i]}.html`;
+                newLink.innerHTML = linkList[i][0].toUpperCase() + linkList[i].slice(1);
+                this.appendChild(newLink);
+            }
+        }
+
+        
+    }
+}
+
 customElements.define("table-view", TableView);
+customElements.define("nav-bar", NavBar);

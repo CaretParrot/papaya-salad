@@ -19,14 +19,11 @@
                 <h1>Welcome to papaya-salad.js!</h1>
                 <h1>I'm glad you are here!</h1>
             </div>
-            <input id="textBox" value="hmmm">
-            <input id="textBox2" value="hm">
-            <textarea id="textArea" value="hi">Hi</textarea>
             <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
                 Javascript a little easier!</p>
             <button id="nextPage" onclick="pg.changePage('empty')">Next Page</button>
             <input type="file" onchange="getFile()" id="fileInput">
-            <table-view id="tv"></table-view>
+            <nav-bar id="navBar"></nav-bar>
         </div>
         <div id="empty" class="page">
             <p>Hahaha this is not empty...</p>
@@ -36,30 +33,10 @@
         <script defer>
             let slideshow = new SlideShow(document.getElementById("slideshow"));
             slideshow.clickable();
-            
+
+            document.getElementById("navBar").setAttribute("links", JSON.stringify(["test"]));
+
             let pg = new PageGroup("page", "grid");
-
-            /* let A = new Matrix(4, 4);
-            A.matrix = [[2, 4, 6, 8], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]];
-            A.echelonForm();
-            console.log(A); */
-
-            let db = new Database();
-            let tv = document.getElementById("tv");
-
-            tv.db = db;
-            
-            let A = new Matrix(4, 5);
-
-            A.matrix = [
-                [0, 1, 2, 3, 4],
-                [1, 2, 3, 4, 5],
-                [2, 3, 4, 5, 6],
-                [3, 4, 5, 6, 7]
-            ];
-
-            A.echelonForm();
-            console.log(A); 
         </script>
     </body>
 
