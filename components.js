@@ -208,6 +208,65 @@ class TableView extends HTMLElement {
     }
 }
 
+class ToggleDiv extends HTMLElement {
+    static observedAttributes = ["heading", "id", "open"];
+    #heading;
+    #br;
+    #divBody;
+
+    constructor() {
+        super();
+    }
+
+    toggleDiv() {
+        if (this.getAttribute("open") === "true") {
+            this.setAttribute("open", "false");
+        } else {
+            this.setAttribute("open", "true");
+        }
+    }
+
+    connectedCallback() {
+        this.setAttribute("open", "false");
+        this.style.backgroundColor = "var(--container)";
+    }
+
+    /**
+     * @param {string} name 
+     * @param {string} oldValue 
+     * @param {string} newValue 
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === "heading") {
+            this.#heading = document.createElement("h1");
+            this.#heading.innerHTML = newValue;
+            this.#heading.style.cursor = "pointer";
+            let currentDiv = this;
+
+            this.#heading.onclick = function () {
+                currentDiv.toggleDiv();
+            }
+
+            this.#br = document.createElement("br");
+            this.#divBody = document.createElement("div");
+            this.appendChild(this.#heading);
+            this.appendChild(this.#br);
+            this.appendChild(this.#divBody);
+        }
+
+        if (name === "open") {
+            let children = this.children;
+            if (newValue === "true") {
+                this.#divBody.style.display = "none";
+                this.#br.style.display = "none";
+            } else {
+                this.#divBody.style.display = "block";
+                this.#br.style.display = "block";
+            }
+        }
+    }
+}
+
 class NavBar extends HTMLElement {
     static observedAttributes = ["links"];
     constructor() {
@@ -226,14 +285,13 @@ class NavBar extends HTMLElement {
             for (let i = 0; i < linkList.length; i++) {
                 let newLink = document.createElement("a");
                 newLink.href = `./${linkList[i]}.html`;
-                newLink.innerHTML = linkList[i][0].toUpperCase() + linkList[i].slice(1);
+                newLink.innerHTML = (linkList[i][0].toUpperCase() + linkList[i].slice(1)).replace("-", " ");
                 this.appendChild(newLink);
             }
         }
-
-        
     }
 }
 
 customElements.define("table-view", TableView);
 customElements.define("nav-bar", NavBar);
+customElements.define("toggle-div", ToggleDiv);

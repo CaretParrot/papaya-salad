@@ -23,7 +23,7 @@
                 Javascript a little easier!</p>
             <button id="nextPage" onclick="pg.changePage('empty')">Next Page</button>
             <input type="file" onchange="getFile()" id="fileInput">
-            <nav-bar id="navBar"></nav-bar>
+            <toggle-div heading="Testing"></toggle-div>
         </div>
         <div id="empty" class="page">
             <p>Hahaha this is not empty...</p>
@@ -33,8 +33,6 @@
         <script defer>
             let slideshow = new SlideShow(document.getElementById("slideshow"));
             slideshow.clickable();
-
-            document.getElementById("navBar").setAttribute("links", JSON.stringify(["test"]));
 
             let pg = new PageGroup("page", "grid");
         </script>
