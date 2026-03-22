@@ -209,9 +209,14 @@ class TableView extends HTMLElement {
 }
 
 class ToggleDiv extends HTMLElement {
-    static observedAttributes = ["heading", "id", "open"];
+    static observedAttributes = ["open"];
+    /**
+     * @type {HTMLElement}
+     */
     #heading;
-    #br;
+    /**
+     * @type {HTMLElement}
+     */
     #divBody;
 
     constructor() {
@@ -229,6 +234,16 @@ class ToggleDiv extends HTMLElement {
     connectedCallback() {
         this.setAttribute("open", "false");
         this.style.backgroundColor = "var(--container)";
+        this.#heading = this.querySelector("h1")[0] || undefined;
+        this.#divBody = this.getElementsByTagName("div")[0] || undefined;
+        let toggleDiv = this;
+        this.#heading.onclick = function () {
+            if (toggleDiv.getAttribute("open") === "false") {
+                toggleDiv.setAttribute("open", "true");
+            } else {
+                toggleDiv.setAttribute("open", "false");
+            }
+        }
     }
 
     /**
@@ -237,32 +252,13 @@ class ToggleDiv extends HTMLElement {
      * @param {string} newValue 
      */
     attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "heading") {
-            this.#heading = document.createElement("h1");
-            this.#heading.innerHTML = newValue;
-            this.#heading.style.cursor = "pointer";
-            let currentDiv = this;
-
-            this.#heading.onclick = function () {
-                currentDiv.toggleDiv();
-            }
-
-            this.#br = document.createElement("br");
-            this.#divBody = document.createElement("div");
-            this.appendChild(this.#heading);
-            this.appendChild(this.#br);
-            this.appendChild(this.#divBody);
-        }
-
         if (name === "open") {
-            let children = this.children;
             if (newValue === "true") {
                 this.#divBody.style.display = "none";
-                this.#br.style.display = "none";
             } else {
                 this.#divBody.style.display = "block";
-                this.#br.style.display = "block";
             }
+            this.getElementsByTagName("h1")[0].style.display = "block";
         }
     }
 }
