@@ -689,6 +689,7 @@ class Matrix {
     /**
      * @param {number} index1 
      * @param {number} index2
+     * @returns {Matrix}
      */
     swapRows(index1, index2) {
         if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
@@ -698,13 +699,15 @@ class Matrix {
         let temp = JSON.parse(JSON.stringify(this.#values[index1 - 1]));
         this.#values[index1 - 1] = this.#values[index2 - 1];
         this.#values[index2 - 1] = temp;
+
+        return this;
     }
 
     /**
      * @param {number} index1 
      * @param {number} scale 
      * @param {number} index2 
-     * @return {number[]}
+     * @return {Matrix}
      */
     addMultipleOfRow(index1, scale, index2) {
         if (index1 > this.m || index1 < 1 || index2 > this.m || index2 < 1) {
@@ -716,10 +719,9 @@ class Matrix {
         for (let i = 0; i < this.n; i++) {
             temp[i] *= scale;
             this.setValue(index2, i + 1, this.getValue(index2, i + 1) + temp[i]);
-
         }
 
-        return this.getRow(index2);
+        return this;
     }
 
     /**
@@ -792,6 +794,9 @@ class Matrix {
         return true;
     }
 
+    /**
+     * @returns {void}
+     */
     moveZeroVectors() { 
         for (let i = 1; i <= this.m; i++) {
             if (this.isZeroVector(i)) {

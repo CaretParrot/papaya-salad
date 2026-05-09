@@ -208,61 +208,6 @@ class TableView extends HTMLElement {
     }
 }
 
-class ToggleDiv extends HTMLElement {
-    static observedAttributes = ["open"];
-    /**
-     * @type {HTMLElement}
-     */
-    #heading;
-    /**
-     * @type {HTMLElement}
-     */
-    #divBody;
-
-    constructor() {
-        super();
-    }
-
-    toggleDiv() {
-        if (this.getAttribute("open") === "true") {
-            this.setAttribute("open", "false");
-        } else {
-            this.setAttribute("open", "true");
-        }
-    }
-
-    connectedCallback() {
-        this.setAttribute("open", "false");
-        this.style.backgroundColor = "var(--container)";
-        this.#heading = this.querySelector("h1")[0] || undefined;
-        this.#divBody = this.getElementsByTagName("div")[0] || undefined;
-        let toggleDiv = this;
-        this.#heading.onclick = function () {
-            if (toggleDiv.getAttribute("open") === "false") {
-                toggleDiv.setAttribute("open", "true");
-            } else {
-                toggleDiv.setAttribute("open", "false");
-            }
-        }
-    }
-
-    /**
-     * @param {string} name 
-     * @param {string} oldValue 
-     * @param {string} newValue 
-     */
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "open") {
-            if (newValue === "true") {
-                this.#divBody.style.display = "none";
-            } else {
-                this.#divBody.style.display = "block";
-            }
-            this.getElementsByTagName("h1")[0].style.display = "block";
-        }
-    }
-}
-
 class NavBar extends HTMLElement {
     static observedAttributes = ["links"];
     constructor() {
@@ -290,4 +235,3 @@ class NavBar extends HTMLElement {
 
 customElements.define("table-view", TableView);
 customElements.define("nav-bar", NavBar);
-customElements.define("toggle-div", ToggleDiv);
