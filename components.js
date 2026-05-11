@@ -233,5 +233,52 @@ class NavBar extends HTMLElement {
     }
 }
 
+class ToggleButton extends HTMLButtonElement {
+    static observedAttributes = ["on", "on-text", "off-text", "onclick"];
+    #on;
+    #onText;
+    #offText; 
+
+    constructor() {
+        super();
+        this.#on = "false";
+        this.#onText = "Off";
+        this.#offText = "On";
+    }
+
+    connectedCallback() {
+        this.#on = "false";
+        this.#onText = "Off";
+        this.#offText = "On";
+    }
+
+    /**
+     * 
+     * @param {string} name 
+     * @param {string} oldValue 
+     * @param {string} newValue 
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+        console.log(name);
+        switch (name) {
+            case "on":
+                this.#on = newValue;
+                this.#on === "false" ? this.innerHTML = this.#onText : this.innerHTML = this.#offText;
+                break;
+            case "on-text":
+                this.#onText = newValue;
+                this.#on === "false" ? this.innerHTML = this.#onText : this.innerHTML = this.#offText;
+                break;
+            case "off-text":
+                this.#offText = newValue;
+                this.#on === "false" ? this.innerHTML = this.#onText : this.innerHTML = this.#offText;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 customElements.define("table-view", TableView);
 customElements.define("nav-bar", NavBar);
+customElements.define("toggle-button", ToggleButton, {extends: "button"});
