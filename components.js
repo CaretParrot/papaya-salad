@@ -235,21 +235,22 @@ class NavBar extends HTMLElement {
 
 class ToggleButton extends HTMLButtonElement {
     static observedAttributes = ["on", "on-text", "off-text", "onclick"];
-    #on;
-    #onText;
-    #offText; 
 
     constructor() {
         super();
-        this.#on = "false";
-        this.#onText = "Off";
-        this.#offText = "On";
     }
 
     connectedCallback() {
-        this.#on = "false";
-        this.#onText = "Off";
-        this.#offText = "On";
+        this.getAttribute("on") === "true" ? this.innerHTML = this.getAttribute("on-text") || "" : this.innerHTML = this.getAttribute("off-text") || "";
+        let thisElement = this;
+
+        this.onclick = function () {
+            if (thisElement.getAttribute("on") === "false") {
+                thisElement.setAttribute("on", "true");
+            } else {
+                thisElement.setAttribute("on", "false");
+            }
+        }
     }
 
     /**
@@ -259,19 +260,15 @@ class ToggleButton extends HTMLButtonElement {
      * @param {string} newValue 
      */
     attributeChangedCallback(name, oldValue, newValue) {
-        console.log(name);
         switch (name) {
             case "on":
-                this.#on = newValue;
-                this.#on === "false" ? this.innerHTML = this.#onText : this.innerHTML = this.#offText;
+                this.getAttribute("on") === "true" ? this.innerHTML = this.getAttribute("on-text") || "" : this.innerHTML = this.getAttribute("off-text") || "";
                 break;
             case "on-text":
-                this.#onText = newValue;
-                this.#on === "false" ? this.innerHTML = this.#onText : this.innerHTML = this.#offText;
+                this.setAttribute("on-text", newValue);
                 break;
             case "off-text":
-                this.#offText = newValue;
-                this.#on === "false" ? this.innerHTML = this.#onText : this.innerHTML = this.#offText;
+                this.setAttribute("off-text", newValue);
                 break;
             default:
                 break;
