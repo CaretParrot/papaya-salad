@@ -276,6 +276,63 @@ class ToggleButton extends HTMLButtonElement {
     }
 }
 
+class Slideshow extends HTMLDivElement {
+    static observedAttributes = ["display-type", "clickable"];
+
+    /**
+     * @type {any}
+     */
+    #slides;
+    #currentSlide;
+    #slideCount;
+    #displayType;
+
+    constructor() {
+        super();
+        this.#slides = undefined;
+        this.#currentSlide = 0;
+        this.#slideCount = 0;
+        this.#displayType = "none";
+    }
+
+    get currentSlide() {
+        return this.#currentSlide;
+    }
+
+    /**
+     * 
+     * @param {number} slideNumber 
+     */
+    set currentSlide(slideNumber) {
+        for (let i = 0; i < this.#slideCount; i++) {
+            this.#slides[i].style.display = "none";
+        }
+
+        /** @type {HTMLElement} */ (this.children[slideNumber]).style.display = this.#displayType;
+        this.#currentSlide = slideNumber;
+    }
+
+    nextSlide() {
+        this.#currentSlide >= this.#slideCount - 1 ? this.currentSlide = 0 : this.currentSlide++;
+    }
+
+    connectedCallback() {
+        this.#slides = this.querySelectorAll("*");
+        this.#slideCount = this.#slides.length;
+        this.#displayType = this.getAttribute("display-type") || "block";
+        this.currentSlide = 0;
+
+        for (let i = 0; i < this.#slideCount; i++) {
+            let slideshow = this;
+            this.style.cursor = "pointer";
+            this.#slides[i].onclick = function () {
+                slideshow.nextSlide();
+            }
+        }
+    }
+}
+
 customElements.define("table-view", TableView);
 customElements.define("nav-bar", NavBar);
-customElements.define("toggle-button", ToggleButton, {extends: "button"});
+customElements.define("toggle-button", ToggleButton, { extends: "button" });
+customElements.define("slide-show", Slideshow, { extends: "div" });

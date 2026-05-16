@@ -7,7 +7,7 @@
         <title>Document</title>
         <link rel='icon' href='https://caretparrot.github.io/papaya-salad/Profile%20Picture.png'>
         <link rel='stylesheet' href="https://caretparrot.github.io/papaya-palettes/default.css">
-        <script src="./components.js"></script>
+        <script defer src="./components.js"></script>
         <script src="./math-plus.js"></script>
         <script src="./script.js"></script>
     </head>
@@ -19,11 +19,13 @@
                 <h1>Welcome to papaya-salad.js!</h1>
                 <h1>I'm glad you are here!</h1>
             </div>
+            <div is="slide-show" style="padding: 0; border: none;">
+                <h1>Testing new slideshow!</h1>
+                <h1>Let's see if this works!</h1>
+            </div>
             <p>Papaya salad is a lightweight Javascript library that adds additional features that make working with
                 Javascript a little easier!</p>
             <button id="nextPage" onclick="pg.changePage('empty')">Next Page</button>
-            <input type="file" onchange="getFile()" id="fileInput">
-            <button is="toggle-button" on="true" on-text="Turn Off" off-text="Turn On"></button>
         </div>
         <div id="empty" class="page">
             <p>Hahaha this is not empty...</p>
