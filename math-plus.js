@@ -1,7 +1,9 @@
 "use strict";
 
 class MathPlus {
-    constructor() { }
+    constructor() {
+
+    }
 
     /**
      * @param {number} value
@@ -746,12 +748,12 @@ class Matrix {
         let i = 1;
         let minDim = Math.min(this.m, this.n);
 
-        for (i = 1; i <= minDim; i++) { 
+        for (i = 1; i <= minDim; i++) {
             if (this.getValue(i, i) !== 0) {
                 this.scaleRow(i, 1 / this.getValue(i, i));
             }
 
-            for (let j = i + 1; j <= this.m; j++) { 
+            for (let j = i + 1; j <= this.m; j++) {
                 this.addMultipleOfRow(i, -this.getValue(j, i), j);
             }
         }
@@ -797,7 +799,7 @@ class Matrix {
     /**
      * @returns {void}
      */
-    moveZeroVectors() { 
+    moveZeroVectors() {
         for (let i = 1; i <= this.m; i++) {
             if (this.isZeroVector(i)) {
                 this.matrix.splice(i - 1, 1);

@@ -276,7 +276,7 @@ class ToggleButton extends HTMLButtonElement {
     }
 }
 
-class Slideshow extends HTMLDivElement {
+class Slideshow extends HTMLElement {
     static observedAttributes = ["display-type", "clickable"];
 
     /**
@@ -325,9 +325,18 @@ class Slideshow extends HTMLDivElement {
         for (let i = 0; i < this.#slideCount; i++) {
             let slideshow = this;
             this.style.cursor = "pointer";
-            this.#slides[i].onclick = function () {
-                slideshow.nextSlide();
+            if (this.getAttribute("disabled") != "true") {
+                this.#slides[i].onclick = function () {
+                    slideshow.nextSlide();
+                }
             }
+        }
+
+        if (this.getAttribute("auto") == "true") {
+            let slideshow = this;
+            setInterval(function () {
+                slideshow.nextSlide();
+            }, +(this.getAttribute("delay") || 1000));
         }
     }
 }
@@ -335,4 +344,4 @@ class Slideshow extends HTMLDivElement {
 customElements.define("table-view", TableView);
 customElements.define("nav-bar", NavBar);
 customElements.define("toggle-button", ToggleButton, { extends: "button" });
-customElements.define("slide-show", Slideshow, { extends: "div" });
+customElements.define("slide-show", Slideshow);
