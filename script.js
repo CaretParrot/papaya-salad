@@ -95,7 +95,7 @@ class RandomPlus {
                 convertedNumber = "King";
                 break;
             default:
-                convertedNumber = randomCardNumber
+                convertedNumber = randomCardNumber;
                 break;
         }
 
@@ -178,26 +178,28 @@ class Binder {
 
 class DeckOfCards {
     #cards;
-    #values;
-    #suits;
     /**
      * @type {object}
      */
     #stats;
 
+    static #values = [
+        "Ace", "Two", "Three", "Four",
+        "Five", "Six", "Seven", "Eight",
+        "Nine", "Ten", "Jack", "Queen", "King"
+    ];
+
+    static #suits = ["Spades", "Diamonds", "Clubs", "Hearts"];
+
     constructor(sorted = true) {
         this.#cards = [];
-        this.#values = [
-            "Ace", "Two", "Three", "Four",
-            "Five", "Six", "Seven", "Eight",
-            "Nine", "Ten", "Jack", "Queen", "King"
-        ];
-        this.#suits = ["Spades", "Diamonds", "Clubs", "Hearts"];
-        this.#stats = {count: 52};
+        this.#stats = {};
+        // @ts-expect-error
+        this.#stats["count"] = 52;
 
-        for (let i = 0; i < this.#suits.length; i++) {
-            for (let j = 0; j < this.#values.length; j++) {
-                this.#cards.push(`${this.#values[j]} of ${this.#suits[i]}`);
+        for (let i = 0; i < DeckOfCards.#suits.length; i++) {
+            for (let j = 0; j < DeckOfCards.#values.length; j++) {
+                this.#cards.push(`${DeckOfCards.#values[j]} of ${DeckOfCards.#suits[i]}`);
             }
         }
         
@@ -231,7 +233,11 @@ class DeckOfCards {
 
     get stats() {
         // @ts-ignore
-        this.#stats.count = this.#cards.length;
+        this.#stats["count"] = this.#cards.length;
         return this.#stats;
+    }
+
+    drawTop() {
+        return this.#cards.shift();
     }
 }
